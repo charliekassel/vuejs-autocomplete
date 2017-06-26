@@ -81,7 +81,7 @@ export default {
      */
     xhrMethod: {
       type: String,
-      default: 'post'
+      default: 'get'
     },
     /**
      * XHR - property of results array
@@ -208,12 +208,12 @@ export default {
       this.lastRequested = this.display
 
       let promise
-      if (this.xhrMethod === 'get') {
-        promise = axios.get(this.source + this.display)
-      } else {
+      if (this.xhrMethod === 'post') {
         const params = {}
         params[this.xhrSearchParams] = this.display
         promise = axios.post(this.source, params)
+      } else {
+        promise = axios.get(this.source + this.display)
       }
 
       promise
