@@ -9,6 +9,7 @@
       type="text"
       :placeholder="placeholder"
       :disabled="disableInput"
+      :class="inputClass"
       @click="search"
       @input="search"
       @keydown.enter="enter"
@@ -61,6 +62,9 @@ export default {
     },
     placeholder: {
       default: 'Search'
+    },
+    inputClass: {
+      type: [String, Object]
     },
     disableInput: {
       type: Boolean
@@ -208,7 +212,7 @@ export default {
         promise = axios.get(this.source + this.display)
       } else {
         const params = {}
-        params[this.searchParams] = this.display
+        params[this.xhrSearchParams] = this.display
         promise = axios.post(this.source, params)
       }
 
@@ -323,13 +327,13 @@ export default {
 
 <style lang="stylus" scoped>
 .autocomplete
+  width 100%
   *
     box-sizing border-box
   position relative
 
   input
-    padding 6px 16px 6px 0
-    width: 100%
+    width 100%
 
 .autocomplete--clear
   cursor pointer
