@@ -17,6 +17,12 @@ var webpackConfig = merge(baseWebpackConfig, {
     })
   },
   devtool: config.build.productionSourceMap ? '#source-map' : false,
+  entry: '@/components/Autocomplete.vue',
+  externals: {
+    vue: 'vue',
+    axios: 'axios',
+    lodash: 'lodash'
+  },
   output: {
     path: config.build.assetsRoot,
     filename: 'build.js',
