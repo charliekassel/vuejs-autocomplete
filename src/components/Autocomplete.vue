@@ -43,6 +43,7 @@
 
 <script type="text/babel">
 import axios from 'axios'
+import debounce from 'lodash/debounce'
 export default {
   props: {
     initialValue: {
@@ -176,11 +177,16 @@ export default {
           break
         case 'object':
           this.loading = true
-          this.objectSearch()
+          this.debouncedSearch()
           break
         default:
           throw new TypeError()
       }
+    },
+
+    debouncedSearch () {
+      const debouncedFunction = debounce(this.resourceSearch.bind(this), 500)
+      debouncedFunction()
     },
 
     resourceSearch () {
@@ -280,9 +286,7 @@ export default {
     },
     clear () {
       this.display = null
-      // this.id = null
-      // this.display = null
-      // this.selected = null
+      this.value = null
 
       this.close()
 
