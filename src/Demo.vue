@@ -13,11 +13,10 @@
       <pre>{{ objectSelected }}</pre>
     </div>
 
-    <h3>XHR source</h3>
+    <h3>XHR source - github api demo</h3>
     <div class="demo-pane">
       <autocomplete
         :source="'https://api.github.com/search/repositories?q='"
-        xhr-method="get"
         xhr-results-property="items"
         @selected="showXHRValue">
       </autocomplete>
@@ -46,6 +45,7 @@ export default {
       this.objectSelected = obj
     },
     showXHRValue (obj) {
+      console.log(obj)
       this.xhrSelected = obj
     }
   }

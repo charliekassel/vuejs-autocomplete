@@ -1,49 +1,52 @@
 <template>
   <div class="autocomplete">
-    <img v-show="isLoading" class="autocomplete__icon animate-spin" src="../assets/loading.svg">
-    <img v-show="isEmpty && !isLoading" class="autocomplete__icon" src="../assets/search.svg">
-    <img v-show="!disableInput && !isEmpty && !isLoading" class="autocomplete__icon autocomplete--clear" @click="clearAndFocus" src="../assets/close.svg">
+    <div class="autocomplete__box">
 
-    <input
-      v-model="display"
-      type="text"
-      :placeholder="placeholder"
-      :disabled="disableInput"
-      :class="inputClass"
-      @click="search"
-      @input="search"
-      @keydown.enter="enter"
-      @keydown.tab="close"
-      @keydown.up="up"
-      @keydown.down="down"
-      @keydown.esc="close"
-      @focus="focus"
-      @blur="blur"
-    >
-    <input :name="name" type="hidden" :value="value">
+      <img v-if="!isLoading" class="autocomplete__icon" src="../assets/search.svg">
+      <img v-else class="autocomplete__icon animate-spin" src="../assets/loading.svg">
+
+      <div class="autocomplete__inputs">
+        <input
+          v-model="display"
+          type="text"
+          :placeholder="placeholder"
+          :disabled="disableInput"
+          :class="inputClass"
+          @click="search"
+          @input="search"
+          @keydown.enter="enter"
+          @keydown.tab="close"
+          @keydown.up="up"
+          @keydown.down="down"
+          @keydown.esc="close"
+          @focus="focus"
+          @blur="blur">
+        <input :name="name" type="hidden" :value="value">
+      </div>
+
+      <img v-show="!disableInput && !isEmpty && !isLoading && !hasError" class="autocomplete__icon autocomplete--clear" @click="clear" src="../assets/close.svg">
+    </div>
 
     <ul v-show="showResults" class="autocomplete__results" :style="listStyle">
-      <li
+      <!-- error -->
+      <li v-if="hasError" class="autocomplete__results__item autocomplete__results__item--error">{{ error }}</li>
+
+      <!-- results -->
+      <li v-if="!hasError"
           v-for="(result, key) in results"
-          @click="select(result)"
+          @click.prevent="select(result)"
           class="autocomplete__results__item"
-          :class="{'selected' : isSelected(key) }"
-      >{{ result.name }}</li>
-    </ul>
+          :class="{'selected' : isSelected(key) }">
+        {{ result.name }}
+      </li>
 
-    <ul v-show="noResults && !isLoading && isFocussed" class="autocomplete__results autocomplete__results--error">
-      <li class="autocomplete__results__item">Nothing found.</li>
+      <!-- no results -->
+      <li v-if="noResults && !isLoading && isFocussed && !hasError" class="autocomplete__results__item">Nothing found.</li>
     </ul>
-
-    <ul v-show="hasError" class="autocomplete__results--error">
-      <li class="autocomplete__results__item">{{ error }}</li>
-    </ul>
-
   </div>
 </template>
 
 <script type="text/babel">
-import axios from 'axios'
 import debounce from 'lodash/debounce'
 export default {
   props: {
@@ -118,13 +121,10 @@ export default {
     return {
       value: null,
       display: null,
-      results: [],
+      results: null,
       selectedIndex: 0,
       loading: false,
       isFocussed: false,
-      isRequesting: false,
-      lastRequested: null,
-      queuedRequest: null,
       error: null,
       selectedId: null,
       selectedDisplay: null
@@ -132,10 +132,10 @@ export default {
   },
   computed: {
     showResults () {
-      return this.results && this.results.length > 0
+      return Array.isArray(this.results) || this.hasError
     },
     noResults () {
-      return this.display && this.results.length === 0
+      return Array.isArray(this.results) && this.results.length === 0
     },
     isEmpty () {
       return !this.display
@@ -152,11 +152,6 @@ export default {
           color: '#ccc'
         }
       }
-    }
-  },
-  watch: {
-    display (value) {
-      this.display = value
     }
   },
   methods: {
@@ -181,69 +176,48 @@ export default {
           break
         case 'object':
           this.loading = true
-          this.debouncedSearch()
+          this.resourceSearch
           break
         default:
           throw new TypeError()
       }
     },
 
-    debouncedSearch () {
-      const debouncedFunction = debounce(this.resourceSearch.bind(this), 500)
-      debouncedFunction()
-    },
-
-    resourceSearch () {
+    resourceSearch: debounce(function () {
       if (!this.display) {
         this.results = []
         this.loading = false
         return
       }
 
-      if (this.isRequesting) {
-        this.queuedRequest = this.display
-        return false
-      }
-      this.isRequesting = true
-      this.lastRequested = this.display
-
       let promise
       if (this.xhrMethod === 'post') {
         const params = {}
         params[this.xhrSearchParams] = this.display
-        promise = axios.post(this.source, params)
+        promise = fetch(this.source, params, {method: 'post'})
       } else {
-        promise = axios.get(this.source + this.display)
+        promise = fetch(this.source + this.display, {method: 'get'})
       }
 
       promise
-        .then((response) => {
-          if (response.data) {
-            this.results = response.data[this.xhrResultsProperty]
+        .then(response => {
+          if (response.ok) {
+            this.error = null
+            return response.json()
+          }
+          throw new Error('Network response was not ok.')
+        })
+        .then(response => {
+          if (response[this.xhrResultsProperty]) {
+            this.results = response[this.xhrResultsProperty]
           }
           this.loading = false
-          this.isRequesting = false
-          this.doQueuedRequest()
         })
-        .catch((error) => {
-          this.error = '[ERROR] ' + error.status + ': ' + error.statusText
+        .catch(error => {
+          this.error = error.message
           this.loading = false
-          this.isRequesting = false
         })
-    },
-
-    doQueuedRequest () {
-      if (!this.queuedRequest) {
-        return false
-      }
-
-      if (this.lastRequested === this.queuedRequest) {
-        this.queuedRequest = null
-        return false
-      }
-
-      this.resourceSearch()
-    },
+    }, 200),
 
     objectSearch () {
       if (!this.display) {
@@ -266,18 +240,17 @@ export default {
 
       this.value = obj.id
       this.display = obj.name
-
-      setTimeout(() => {
-        this.close()
-      }, 100)
-
-      this.$el.querySelector('input').blur()
+      this.selectedDisplay = obj.name
 
       this.$emit('selected', {
         value: this.value,
         display: this.display,
         selectedObject: obj
       })
+
+      setTimeout(() => {
+        this.close()
+      }, 100)
     },
     up () {
       this.selectedIndex = (this.selectedIndex === 0) ? this.results.length - 1 : this.selectedIndex - 1
@@ -291,8 +264,8 @@ export default {
     clear () {
       this.display = null
       this.value = null
-
-      this.close()
+      this.results = null
+      this.error = null
 
       this.$emit('selected', {
         value: null,
@@ -300,40 +273,55 @@ export default {
         selected: null
       })
     },
-    clearAndFocus () {
-      this.clear()
-      this.$el.querySelector('input').focus()
-    },
     close () {
-      if (this.display && this.display !== this.display) {
+      if (!this.value || !this.selectedDisplay) {
         this.clear()
       }
-      this.results = []
+      if (this.selectedDisplay !== this.display && this.value) {
+        this.display = this.selectedDisplay
+      }
+
+      this.results = null
       this.error = null
+      document.removeEventListener('click', this.clickOutsideListener, true)
+    },
+    clickOutsideListener (event) {
+      if (this.$el && !this.$el.contains(event.target)) {
+        this.close()
+      }
     }
   },
   mounted () {
     this.value = this.initialValue
     this.display = this.initialDisplay
-
-    document.addEventListener('click', (e) => {
-      if (this.$el && !this.$el.contains(e.target)) {
-        this.close()
-      }
-    }, false)
+    this.selectedDisplay = this.initialDisplay
   }
 }
 </script>
 
 <style lang="stylus" scoped>
 .autocomplete
+  position relative
   width 100%
   *
     box-sizing border-box
-  position relative
 
+.autocomplete__box
+  display flex
+  align-items center
+  background #fff
+  border: 1px solid #ccc
+  border-radius 3px
+  padding 0 5px
+
+
+.autocomplete__inputs
+  flex-grow 1
   input
     width 100%
+    border 0
+    &:focus
+      outline none
 
 .autocomplete--clear
   cursor pointer
@@ -351,8 +339,9 @@ export default {
   border 1px solid #ccc
   border-top 0
   color black
-  &.autocomplete__results__item--error
-    color red
+
+.autocomplete__results__item--error
+  color red
 
 .autocomplete__results__item
   padding 7px 10px
@@ -362,15 +351,10 @@ export default {
     background rgba(0, 180, 255, 0.15)
 
 .autocomplete__icon
-  fill red
-  color green
-  position absolute
-  right 4px
-  top 6px
-  line-height 32px
-  color #ccc
+
   height 14px
   width 14px
+  // margin 0 6px
 
 .animate-spin
   animation spin 2s infinite linear

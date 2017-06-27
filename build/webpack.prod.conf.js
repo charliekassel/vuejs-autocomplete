@@ -20,7 +20,6 @@ var webpackConfig = merge(baseWebpackConfig, {
   entry: '@/components/Autocomplete.vue',
   externals: {
     vue: 'vue',
-    axios: 'axios',
     lodash: 'lodash'
   },
   output: {
