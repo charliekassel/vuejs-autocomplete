@@ -27,9 +27,6 @@
       <img v-show="!disableInput && !isEmpty && !isLoading && !hasError" class="autocomplete__icon autocomplete--clear" @click="clear" src="../assets/close.svg">
     </div>
 
-        {{ display }}
-
-
     <ul v-show="showResults" class="autocomplete__results" :style="listStyle">
       <!-- error -->
       <li v-if="hasError" class="autocomplete__results__item autocomplete__results__item--error">{{ error }}</li>
