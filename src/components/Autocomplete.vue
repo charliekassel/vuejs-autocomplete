@@ -275,12 +275,7 @@ export default {
       this.clearValues()
       this.results = null
       this.error = null
-
-      this.$emit('selected', {
-        value: null,
-        display: null,
-        selected: null
-      })
+      this.$emit('clear')
     },
     clearValues () {
       this.display = null

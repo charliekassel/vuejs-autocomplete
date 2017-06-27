@@ -18,7 +18,8 @@
       <autocomplete
         :source="'https://api.github.com/search/repositories?q='"
         xhr-results-property="items"
-        @selected="showXHRValue">
+        @selected="setXHRValue"
+        @clear="setXHRValue({})">
       </autocomplete>
       <pre>{{ xhrSelected }}</pre>
     </div>
@@ -44,7 +45,7 @@ export default {
     showObjValue (obj) {
       this.objectSelected = obj
     },
-    showXHRValue (obj) {
+    setXHRValue (obj) {
       this.xhrSelected = obj
     }
   }
