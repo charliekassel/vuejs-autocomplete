@@ -298,7 +298,7 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 .autocomplete
   position relative
   width 100%
