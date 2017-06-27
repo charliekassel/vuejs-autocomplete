@@ -23,16 +23,6 @@
       <pre>{{ xhrSelected }}</pre>
     </div>
 
-    <h3>XHR source - VL2</h3>
-    <div class="demo-pane">
-      <autocomplete
-        :source="'http://local-service-video-library.vice.com/keywords/search?query='"
-        xhr-results-property="data"
-        @selected="showXHRValue">
-      </autocomplete>
-      <pre>{{ xhrSelected }}</pre>
-    </div>
-
   </div>
 </template>
 
@@ -55,7 +45,6 @@ export default {
       this.objectSelected = obj
     },
     showXHRValue (obj) {
-      console.log(obj)
       this.xhrSelected = obj
     }
   }

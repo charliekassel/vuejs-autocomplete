@@ -21,10 +21,14 @@
           @focus="focus"
           @blur="blur">
         <input :name="name" type="hidden" :value="value">
+
       </div>
 
       <img v-show="!disableInput && !isEmpty && !isLoading && !hasError" class="autocomplete__icon autocomplete--clear" @click="clear" src="../assets/close.svg">
     </div>
+
+        {{ display }}
+
 
     <ul v-show="showResults" class="autocomplete__results" :style="listStyle">
       <!-- error -->
@@ -114,6 +118,18 @@ export default {
     xhrResultsDisplay: {
       type: String,
       default: 'name'
+    }
+  },
+  watch: {
+    'initialDisplay': function (newVal, oldVal) {
+      console.log(newVal)
+      this.$nextTick(() => {
+        this.display = newVal
+        console.log(this.display)
+      })
+    },
+    'initialValue': function (newVal, oldVal) {
+      this.value = newVal
     }
   },
   data () {
@@ -261,8 +277,7 @@ export default {
       this.select(this.results[this.selectedIndex])
     },
     clear () {
-      this.display = null
-      this.value = null
+      this.clearValues()
       this.results = null
       this.error = null
 
@@ -271,6 +286,10 @@ export default {
         display: null,
         selected: null
       })
+    },
+    clearValues () {
+      this.display = null
+      this.value = null
     },
     close () {
       if (!this.value || !this.selectedDisplay) {
