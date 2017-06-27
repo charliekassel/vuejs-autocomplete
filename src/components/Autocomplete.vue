@@ -1,6 +1,6 @@
 <template>
   <div class="autocomplete">
-    <div class="autocomplete__box">
+    <div class="autocomplete__box" :class="inputClass">
 
       <img v-if="!isLoading" class="autocomplete__icon" src="../assets/search.svg">
       <img v-else class="autocomplete__icon animate-spin" src="../assets/loading.svg">
@@ -11,7 +11,6 @@
           type="text"
           :placeholder="placeholder"
           :disabled="disableInput"
-          :class="inputClass"
           @click="search"
           @input="search"
           @keydown.enter="enter"
@@ -36,7 +35,7 @@
           v-for="(result, key) in results"
           @click.prevent="select(result)"
           class="autocomplete__results__item"
-          :class="{'selected' : isSelected(key) }">
+          :class="{'autocomplete__selected' : isSelected(key) }">
         {{ result.name }}
       </li>
 
@@ -347,7 +346,7 @@ export default {
   padding 7px 10px
   &:hover
     background rgba(0, 180, 255, 0.075)
-  &.selected
+  &.autocomplete__selected
     background rgba(0, 180, 255, 0.15)
 
 .autocomplete__icon
