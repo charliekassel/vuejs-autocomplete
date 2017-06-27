@@ -260,9 +260,7 @@ export default {
         selectedObject: obj
       })
 
-      setTimeout(() => {
-        this.close()
-      }, 100)
+      this.close()
     },
     up () {
       this.selectedIndex = (this.selectedIndex === 0) ? this.results.length - 1 : this.selectedIndex - 1
@@ -332,6 +330,7 @@ export default {
 
 .autocomplete__inputs
   flex-grow 1
+  padding 0 5px
   input
     width 100%
     border 0
@@ -366,10 +365,8 @@ export default {
     background rgba(0, 180, 255, 0.15)
 
 .autocomplete__icon
-
   height 14px
   width 14px
-  // margin 0 6px
 
 .animate-spin
   animation spin 2s infinite linear
