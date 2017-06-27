@@ -223,6 +223,9 @@ export default {
           if (response[this.xhrResultsProperty]) {
             this.results = response[this.xhrResultsProperty]
           }
+          if (this.results.length === 0) {
+            this.$emit('noResults')
+          }
           this.loading = false
         })
         .catch(error => {
