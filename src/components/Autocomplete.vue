@@ -1,6 +1,6 @@
 <template>
   <div class="autocomplete">
-    <div class="autocomplete__box" :class="inputClass">
+    <div class="autocomplete__box" :class="[inputClass, {'autocomplete__searching' : showResults}]">
 
       <img v-if="!isLoading" class="autocomplete__icon" src="../assets/search.svg">
       <img v-else class="autocomplete__icon animate-spin" src="../assets/loading.svg">
@@ -28,20 +28,23 @@
     </div>
 
     <ul v-show="showResults" class="autocomplete__results" :style="listStyle">
-      <!-- error -->
-      <li v-if="hasError" class="autocomplete__results__item autocomplete__results__item--error">{{ error }}</li>
 
-      <!-- results -->
-      <li v-if="!hasError"
-          v-for="(result, key) in results"
-          @click.prevent="select(result)"
-          class="autocomplete__results__item"
-          :class="{'autocomplete__selected' : isSelected(key) }">
-        {{ result.name }}
-      </li>
+      <slot name="results">
+        <!-- error -->
+        <li v-if="hasError" class="autocomplete__results__item autocomplete__results__item--error">{{ error }}</li>
 
-      <!-- no results -->
-      <li v-if="noResults && !isLoading && isFocussed && !hasError" class="autocomplete__results__item">Nothing found.</li>
+        <!-- results -->
+        <li v-if="!hasError"
+            v-for="(result, key) in results"
+            @click.prevent="select(result)"
+            class="autocomplete__results__item"
+            :class="{'autocomplete__selected' : isSelected(key) }">
+          {{ displayProperty(result) }}
+        </li>
+
+        <!-- no results -->
+        <li v-if="noResults && !isLoading && isFocussed && !hasError" class="autocomplete__results__item autocomplete__no-results">Nothing found.</li>
+      </slot>
     </ul>
   </div>
 </template>
@@ -50,25 +53,46 @@
 import debounce from 'lodash/debounce'
 export default {
   props: {
-    initialValue: {
-      type: [String, Number]
-    },
-    initialDisplay: {
-      type: String
-    },
-    selected: {
-      required: false
-    },
+    /**
+     * Data source for the results
+     * @type {String|Object}
+     */
     source: {
       type: [Object, Array, String],
       required: true
     },
+    /**
+     * Input placeholder
+     * @type {String}
+     */
     placeholder: {
       default: 'Search'
     },
+    /**
+     * Preset starting value
+     * @type {String|Number}
+     */
+    initialValue: {
+      type: [String, Number]
+    },
+    /**
+     * Preset starting display value
+     * @type {String}
+     */
+    initialDisplay: {
+      type: String
+    },
+    /**
+     * CSS class for the surrounding input div
+     * @type {String|Object}
+     */
     inputClass: {
       type: [String, Object]
     },
+    /**
+     * To disable the input
+     * @type {Boolean}
+     */
     disableInput: {
       type: Boolean
     },
@@ -80,31 +104,31 @@ export default {
       type: String
     },
     /**
-     * XHR method
+     * api http method
      */
-    xhrMethod: {
+    apiMethod: {
       type: String,
       default: 'get'
     },
     /**
-     * XHR - property of results array
+     * api - property of results array
      * @type {String}
      */
-    xhrResultsProperty: {
+    apiResultsProperty: {
       type: String
     },
     /**
-     * Parameter required for the xhr search query
+     * Parameter required for the api search query
      * @type {String}
      */
-    xhrSearchParams: {
+    apiSearchParams: {
       type: String
     },
     /**
      * Results property used as the value
      * @type {String}
      */
-    xhrResultsValue: {
+    apiResultsValue: {
       type: String,
       default: 'id'
     },
@@ -112,21 +136,9 @@ export default {
      * Results property used as the display
      * @type {String}
      */
-    xhrResultsDisplay: {
+    apiResultsDisplay: {
       type: String,
       default: 'name'
-    }
-  },
-  watch: {
-    'initialDisplay': function (newVal, oldVal) {
-      console.log(newVal)
-      this.$nextTick(() => {
-        this.display = newVal
-        console.log(this.display)
-      })
-    },
-    'initialValue': function (newVal, oldVal) {
-      this.value = newVal
     }
   },
   data () {
@@ -139,7 +151,8 @@ export default {
       isFocussed: false,
       error: null,
       selectedId: null,
-      selectedDisplay: null
+      selectedDisplay: null,
+      eventListener: false
     }
   },
   computed: {
@@ -188,7 +201,7 @@ export default {
           break
         case 'object':
           this.loading = true
-          this.resourceSearch
+          this.objectSearch()
           break
         default:
           throw new TypeError()
@@ -203,13 +216,15 @@ export default {
       }
 
       let promise
-      if (this.xhrMethod === 'post') {
+      if (this.apiMethod === 'post') {
         const params = {}
-        params[this.xhrSearchParams] = this.display
+        params[this.apiSearchParams] = this.display
         promise = fetch(this.source, params, {method: 'post'})
       } else {
         promise = fetch(this.source + this.display, {method: 'get'})
       }
+
+      this.setEventListener()
 
       promise
         .then(response => {
@@ -220,9 +235,7 @@ export default {
           throw new Error('Network response was not ok.')
         })
         .then(response => {
-          if (response[this.xhrResultsProperty]) {
-            this.results = response[this.xhrResultsProperty]
-          }
+          this.results = this.setResults(response)
           if (this.results.length === 0) {
             this.$emit('noResults')
           }
@@ -234,7 +247,24 @@ export default {
         })
     }, 200),
 
+    /**
+     * Set results property from api response
+     * @param {Object|Array} response
+     * @return {Array}
+     */
+    setResults (response) {
+      if (this.apiResultsProperty && response[this.apiResultsProperty]) {
+        return response[this.apiResultsProperty]
+      }
+      if (Array.isArray(response)) {
+        return response
+      }
+      return []
+    },
+
     objectSearch () {
+      this.setEventListener()
+
       if (!this.display) {
         this.results = this.source
         this.loading = false
@@ -253,9 +283,7 @@ export default {
         return
       }
 
-      this.value = obj.id
-      this.display = obj.name
-      this.selectedDisplay = obj.name
+      this.setValues(obj)
 
       this.$emit('selected', {
         value: this.value,
@@ -263,8 +291,21 @@ export default {
         selectedObject: obj
       })
 
+      this.$emit('input', this.value)
+
       this.close()
     },
+
+    setValues (obj) {
+      this.value = (this.apiResultsValue && obj[this.apiResultsValue]) ? obj[this.apiResultsValue] : obj.id
+      this.display = (this.apiResultsDisplay && obj[this.apiResultsDisplay]) ? obj[this.apiResultsDisplay] : obj.name
+      this.selectedDisplay = this.display
+    },
+
+    displayProperty (obj) {
+      return (this.apiResultsDisplay && obj[this.apiResultsDisplay]) ? obj[this.apiResultsDisplay] : obj.name
+    },
+
     up () {
       this.selectedIndex = (this.selectedIndex === 0) ? this.results.length - 1 : this.selectedIndex - 1
     },
@@ -294,6 +335,19 @@ export default {
 
       this.results = null
       this.error = null
+      this.removeEventListener()
+      this.$emit('close')
+    },
+    setEventListener () {
+      if (this.eventListener) {
+        return false
+      }
+      this.eventListener = true
+      document.addEventListener('click', this.clickOutsideListener, true)
+      return true
+    },
+    removeEventListener () {
+      this.eventListener = false
       document.removeEventListener('click', this.clickOutsideListener, true)
     },
     clickOutsideListener (event) {
@@ -325,6 +379,8 @@ export default {
   border-radius 3px
   padding 0 5px
 
+.autocomplete__searching
+  border-radius 3px 3px 0 0
 
 .autocomplete__inputs
   flex-grow 1
