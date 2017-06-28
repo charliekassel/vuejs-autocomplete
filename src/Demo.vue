@@ -100,8 +100,8 @@
           :source="'https://api.github.com/search/users?q='"
           api-results-property="items"
           api-results-display="login"
-          @noResults="ask = true"
-          @close="ask = false">
+          @noResults="showAsk"
+          @close="ask = null">
           <li v-if="ask" slot="results" class="autocomplete__results__item" @click="create">Click to create a new one</li>
         </autocomplete>
 
@@ -132,7 +132,7 @@ export default {
     return {
       objectResults: null,
       apiResults: null,
-      ask: false,
+      ask: null,
       demo1: null
     }
   },
@@ -143,8 +143,13 @@ export default {
     setXHRValue (obj) {
       this.apiResults = obj
     },
-    create () {
-      alert('This is just a demo...')
+    showAsk (args) {
+      this.ask = {
+        query: args.query
+      }
+    },
+    create (search) {
+      alert('Create item for "' + this.ask.query + '"\n\nBut this is just a demo...')
     }
   }
 }

@@ -237,7 +237,7 @@ export default {
         .then(response => {
           this.results = this.setResults(response)
           if (this.results.length === 0) {
-            this.$emit('noResults')
+            this.$emit('noResults', {query: this.display})
           }
           this.loading = false
         })
