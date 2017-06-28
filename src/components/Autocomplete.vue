@@ -238,6 +238,8 @@ export default {
           this.results = this.setResults(response)
           if (this.results.length === 0) {
             this.$emit('noResults', {query: this.display})
+          } else {
+            this.$emit('results', {results: this.results})
           }
           this.loading = false
         })
@@ -253,6 +255,7 @@ export default {
      * @return {Array}
      */
     setResults (response) {
+      console.log(response, this.apiResultsProperty)
       if (this.apiResultsProperty && response[this.apiResultsProperty]) {
         return response[this.apiResultsProperty]
       }
@@ -267,6 +270,7 @@ export default {
 
       if (!this.display) {
         this.results = this.source
+        this.$emit('results', {results: this.results})
         this.loading = false
         return true
       }
@@ -274,7 +278,8 @@ export default {
       this.results = this.source.filter((item) => {
         return item.name.toLowerCase().includes(this.display.toLowerCase())
       })
-
+      // not v.dry :(
+      this.$emit('results', {results: this.results})
       this.loading = false
     },
 
