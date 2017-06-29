@@ -257,8 +257,7 @@ export default {
 
     getHeaders () {
       return new Headers({
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
+        'Accept': 'application/json, text/plain, */*'
       })
     },
 
