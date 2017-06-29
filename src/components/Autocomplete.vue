@@ -219,9 +219,15 @@ export default {
       if (this.apiMethod === 'post') {
         const params = {}
         params[this.apiSearchParams] = this.display
-        promise = fetch(this.source, params, {method: 'post'})
+        promise = fetch(this.source, params, {
+          method: 'post',
+          headers: this.getHeaders()
+        })
       } else {
-        promise = fetch(this.source + this.display, {method: 'get'})
+        promise = fetch(this.source + this.display, {
+          method: 'get',
+          headers: this.getHeaders()
+        })
       }
 
       this.setEventListener()
@@ -249,13 +255,19 @@ export default {
         })
     }, 200),
 
+    getHeaders () {
+      return new Headers({
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      })
+    },
+
     /**
      * Set results property from api response
      * @param {Object|Array} response
      * @return {Array}
      */
     setResults (response) {
-      console.log(response, this.apiResultsProperty)
       if (this.apiResultsProperty && response[this.apiResultsProperty]) {
         return response[this.apiResultsProperty]
       }
