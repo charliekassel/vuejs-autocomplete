@@ -20,7 +20,8 @@ var webpackConfig = merge(baseWebpackConfig, {
   entry: '@/components/Autocomplete.vue',
   externals: {
     vue: 'vue',
-    lodash: 'lodash'
+    lodash: 'lodash',
+    axios: 'axios'
   },
   output: {
     path: config.build.assetsRoot,
