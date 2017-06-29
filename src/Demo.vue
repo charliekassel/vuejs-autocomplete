@@ -1,12 +1,6 @@
 <template>
   <div id="app">
 
-    <autocomplete
-          source="https://dev-video-library.viceops.net/api/keywords/search?query="
-          api-results-property="data">
-        </autocomplete>
-
-
     <h1>Autocomplete Demo</h1>
 
     <div class="demo">

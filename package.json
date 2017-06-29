@@ -32,7 +32,6 @@
     "url": "https://github.com/charliekassel/vuejs-autocomplete/issues"
   },
   "dependencies": {
-    "axios": "^0.16.2",
     "lodash": "^4.17.4",
     "vue": "^2.3.3"
   },

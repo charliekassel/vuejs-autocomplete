@@ -50,7 +50,6 @@
 </template>
 
 <script type="text/babel">
-import axios from 'axios'
 import debounce from 'lodash/debounce'
 export default {
   props: {
@@ -220,16 +219,31 @@ export default {
       if (this.apiMethod === 'post') {
         const params = {}
         params[this.apiSearchParams] = this.display
-        promise = axios.post(this.source, params)
+        promise = fetch(this.source, params, {
+          method: 'post',
+          credentials: 'same-origin',
+          headers: this.getHeaders()
+        })
       } else {
-        promise = axios.get(this.source + this.display)
+        promise = fetch(this.source + this.display, {
+          method: 'get',
+          credentials: 'same-origin',
+          headers: this.getHeaders()
+        })
       }
 
       this.setEventListener()
 
       promise
         .then(response => {
-          this.results = this.setResults(response.data)
+          if (response.ok) {
+            this.error = null
+            return response.json()
+          }
+          throw new Error('Network response was not ok.')
+        })
+        .then(response => {
+          this.results = this.setResults(response)
           if (this.results.length === 0) {
             this.$emit('noResults', {query: this.display})
           } else {
@@ -242,6 +256,13 @@ export default {
           this.loading = false
         })
     }, 200),
+
+    getHeaders () {
+      return new Headers({
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      })
+    },
 
     /**
      * Set results property from api response
