@@ -139,6 +139,14 @@ export default {
     apiResultsDisplay: {
       type: String,
       default: 'name'
+    },
+
+    /**
+     * Additional request headers
+     * @type {Object}
+     */
+    requestHeaders: {
+      type: Object
     }
   },
   data () {
@@ -216,6 +224,7 @@ export default {
       }
 
       let promise
+      // do we need this?
       if (this.apiMethod === 'post') {
         const params = {}
         params[this.apiSearchParams] = this.display
@@ -225,6 +234,7 @@ export default {
           headers: this.getHeaders()
         })
       } else {
+        // query param should be a setting, rather than appended.
         promise = fetch(this.source + this.display, {
           method: 'get',
           credentials: 'same-origin',
@@ -258,10 +268,17 @@ export default {
     }, 200),
 
     getHeaders () {
-      return new Headers({
+      const headers = {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
-      })
+      }
+
+      if (this.requestHeaders) {
+        for (var prop in this.requestHeaders) {
+          headers[prop] = this.requestHeaders[prop]
+        }
+      }
+      return new Headers(headers)
     },
 
     /**

@@ -38,4 +38,5 @@ Object data source
 | apiResultsProperty    | String             |          |           | property api results are keyed under|
 | apiResultsValue       | String             |          |           | property to use for the `value`|
 | apiResultsDisplay     | String             |          |           | property to use for the `display`|
+| requestHeaders        | Object             |          |           | extra headers appended to the request|
 
