@@ -104,13 +104,6 @@ export default {
       type: String
     },
     /**
-     * api http method
-     */
-    apiMethod: {
-      type: String,
-      default: 'get'
-    },
-    /**
      * api - property of results array
      * @type {String}
      */
@@ -223,24 +216,12 @@ export default {
         return
       }
 
-      let promise
-      // do we need this?
-      if (this.apiMethod === 'post') {
-        const params = {}
-        params[this.apiSearchParams] = this.display
-        promise = fetch(this.source, params, {
-          method: 'post',
-          credentials: 'same-origin',
-          headers: this.getHeaders()
-        })
-      } else {
-        // query param should be a setting, rather than appended.
-        promise = fetch(this.source + this.display, {
-          method: 'get',
-          credentials: 'same-origin',
-          headers: this.getHeaders()
-        })
-      }
+      // query param should be a setting, rather than appended.
+      let promise = fetch(this.source + this.display, {
+        method: 'get',
+        credentials: 'same-origin',
+        headers: this.getHeaders()
+      })
 
       this.setEventListener()
 

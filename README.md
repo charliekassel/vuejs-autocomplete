@@ -33,7 +33,6 @@ Object data source
 | inputClass            | String|Object      |          |           | css class for the input div|
 | disableInput          | Boolean            |          |           | to disable the input|
 | name                  | String             |          |           | name attribute for the `value` input|
-| apiMethod             | String             |          | get       | http method|
 | apiSearchParams       | String             |          |           | if http method is `post` this is the property to send query under|
 | apiResultsProperty    | String             |          |           | property api results are keyed under|
 | apiResultsValue       | String             |          |           | property to use for the `value`|
