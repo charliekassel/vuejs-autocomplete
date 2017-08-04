@@ -117,6 +117,37 @@
         </code>
       </div>
     </div>
+
+    <div class="demo">
+      <h3>Using function for apiResultsDisplay</h3>
+
+      <div class="example">
+        <h5>Example</h5>
+        <autocomplete
+          source="https://api.github.com/search/repositories?q="
+          api-results-property="items"
+          :api-results-display="formatDisplay"
+          @selected="setXHRValue"
+          @clear="setXHRValue({})">
+        </autocomplete>
+
+        <div class="results" v-if="apiResults">
+          <p>Results:</p>
+          <pre>{{ apiResults }}</pre>
+        </div>
+
+        <code>
+    &lt;autocomplete
+      source="https://api.github.com/search/repositories?q="
+      api-results-property="items"
+      :api-results-display="formatDisplay"&gt;
+    &lt;/autocomplete&gt;
+        </code>
+
+      </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -150,6 +181,10 @@ export default {
     },
     create (search) {
       alert('Create item for "' + this.ask.query + '"\n\nBut this is just a demo...')
+    },
+
+    formatDisplay (result) {
+      return result.stargazers_count + '* ' + result.full_name
     }
   }
 }

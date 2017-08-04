@@ -130,7 +130,7 @@ export default {
      * @type {String}
      */
     apiResultsDisplay: {
-      type: String,
+      type: [String, Function],
       default: 'name'
     },
 
@@ -320,7 +320,9 @@ export default {
     },
 
     displayProperty (obj) {
-      return (this.apiResultsDisplay && obj[this.apiResultsDisplay]) ? obj[this.apiResultsDisplay] : obj.name
+      return typeof this.apiResultsDisplay === 'function'
+        ? this.apiResultsDisplay(obj)
+        : obj[this.apiResultsDisplay] ? obj[this.apiResultsDisplay] : obj.name
     },
 
     up () {
