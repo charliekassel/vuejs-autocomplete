@@ -12,8 +12,8 @@
         <h5>Example</h5>
         <autocomplete
           source="https://api.github.com/search/repositories?q="
-          api-results-property="items"
-          api-results-display="full_name"
+          results-property="items"
+          results-display="full_name"
           @selected="setXHRValue"
           @clear="setXHRValue({})">
         </autocomplete>
@@ -26,8 +26,8 @@
         <code>
     &lt;autocomplete
       source="https://api.github.com/search/repositories?q="
-      api-results-property="items"
-      api-results-display="full_name"&gt;
+      results-property="items"
+      results-display="full_name"&gt;
     &lt;/autocomplete&gt;
         </code>
 
@@ -42,7 +42,8 @@
       <div class="example">
         <h5>Example</h5>
         <autocomplete
-          :source="[{id:1,name:'abc'},{id:2,name:'def'}]"
+          :source="[{id:1,name:'abc',other:'!'},{id:2,name:'def',other:'?'}]"
+          :results-display="function(obj) {return obj.name + obj.other}"
           :initial-display="'abc'"
           :initial-value="1"
           @selected="setObjValue"
@@ -56,7 +57,8 @@
 
         <code>
     &lt;autocomplete
-      :source="[{id:1,name:'abc'},{id:2,name:'def'}]"
+      :source="[{id:1,name:'abc',other:'!'},{id:2,name:'def',other:'?'}]"
+      :results-display="function(obj) {return obj.name + obj.other}"
       :initial-display="'abc'"
       :initial-value="1"&gt;
     &lt;/autocomplete&gt;
@@ -99,8 +101,8 @@
       <div class="example">
         <autocomplete
           :source="'https://api.github.com/search/users?q='"
-          api-results-property="items"
-          api-results-display="login"
+          results-property="items"
+          results-display="login"
           @noResults="showAsk"
           @close="ask = null">
           <li v-if="ask" slot="results" class="autocomplete__results__item" @click="create">Click to create a new one</li>
@@ -109,8 +111,8 @@
         <code>
     &lt;autocomplete
       :source="'https://api.github.com/search/users?q='"
-      api-results-property="items"
-      api-results-display="login"
+      results-property="items"
+      results-display="login"
       @noResults="ask = true"&gt;
       &lt;li v-if="ask" slot="results" class="autocomplete__results__item" @click="create"&gt;Click to create a new one&lt;/li&gt;
     &lt;/autocomplete&gt;
@@ -119,14 +121,14 @@
     </div>
 
     <div class="demo">
-      <h3>Using function for apiResultsDisplay</h3>
+      <h3>Using function for resultsDisplay</h3>
 
       <div class="example">
         <h5>Example</h5>
         <autocomplete
           source="https://api.github.com/search/repositories?q="
-          api-results-property="items"
-          :api-results-display="formatDisplay"
+          results-property="items"
+          :results-display="formatDisplay"
           @selected="setXHRValue"
           @clear="setXHRValue({})">
         </autocomplete>
@@ -139,8 +141,8 @@
         <code>
     &lt;autocomplete
       source="https://api.github.com/search/repositories?q="
-      api-results-property="items"
-      :api-results-display="formatDisplay"&gt;
+      results-property="items"
+      :results-display="formatDisplay"&gt;
     &lt;/autocomplete&gt;
         </code>
 

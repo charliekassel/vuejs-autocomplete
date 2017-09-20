@@ -107,21 +107,14 @@ export default {
      * api - property of results array
      * @type {String}
      */
-    apiResultsProperty: {
-      type: String
-    },
-    /**
-     * Parameter required for the api search query
-     * @type {String}
-     */
-    apiSearchParams: {
+    resultsProperty: {
       type: String
     },
     /**
      * Results property used as the value
      * @type {String}
      */
-    apiResultsValue: {
+    resultsValue: {
       type: String,
       default: 'id'
     },
@@ -129,7 +122,7 @@ export default {
      * Results property used as the display
      * @type {String}
      */
-    apiResultsDisplay: {
+    resultsDisplay: {
       type: [String, Function],
       default: 'name'
     },
@@ -268,8 +261,8 @@ export default {
      * @return {Array}
      */
     setResults (response) {
-      if (this.apiResultsProperty && response[this.apiResultsProperty]) {
-        return response[this.apiResultsProperty]
+      if (this.resultsProperty && response[this.resultsProperty]) {
+        return response[this.resultsProperty]
       }
       if (Array.isArray(response)) {
         return response
@@ -314,15 +307,15 @@ export default {
     },
 
     setValues (obj) {
-      this.value = (this.apiResultsValue && obj[this.apiResultsValue]) ? obj[this.apiResultsValue] : obj.id
-      this.display = (this.apiResultsDisplay && obj[this.apiResultsDisplay]) ? obj[this.apiResultsDisplay] : obj.name
+      this.value = (this.resultsValue && obj[this.resultsValue]) ? obj[this.resultsValue] : obj.id
+      this.display = this.displayProperty(obj)
       this.selectedDisplay = this.display
     },
 
     displayProperty (obj) {
-      return typeof this.apiResultsDisplay === 'function'
-        ? this.apiResultsDisplay(obj)
-        : obj[this.apiResultsDisplay] ? obj[this.apiResultsDisplay] : obj.name
+      return typeof this.resultsDisplay === 'function'
+        ? this.resultsDisplay(obj)
+        : obj[this.resultsDisplay] ? obj[this.resultsDisplay] : obj.name
     },
 
     up () {
