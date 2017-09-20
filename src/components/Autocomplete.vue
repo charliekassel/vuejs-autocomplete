@@ -281,7 +281,7 @@ export default {
       }
 
       this.results = this.source.filter((item) => {
-        return item.name.toLowerCase().includes(this.display.toLowerCase())
+        return this.displayProperty(item).toLowerCase().includes(this.display.toLowerCase())
       })
       // not v.dry :(
       this.$emit('results', {results: this.results})
@@ -312,6 +312,10 @@ export default {
       this.selectedDisplay = this.display
     },
 
+    /**
+     * @param  {Object} obj
+     * @return {String}
+     */
     displayProperty (obj) {
       return typeof this.resultsDisplay === 'function'
         ? this.resultsDisplay(obj)
