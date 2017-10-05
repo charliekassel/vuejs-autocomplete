@@ -60,11 +60,11 @@ methods: {
 
 | Prop                  | Type               | Required | Default   | Description|
 |-----------------------|--------------------|----------|-----------|------------|
-| source                | String|Object|Array| true     |           | data source for the results|
+| source                | String\|Object\|Array| true     |           | data source for the results|
 | placeholder           | String             |          | 'Search'  | input placeholder|
-| initialValue          | String|Number      |          |           | starting value|
+| initialValue          | String\|Number      |          |           | starting value|
 | initialDisplay        | String             |          |           | starting display value|
-| inputClass            | String|Object      |          |           | css class for the input div|
+| inputClass            | String\|Object      |          |           | css class for the input div|
 | disableInput          | Boolean            |          |           | to disable the input|
 | name                  | String             |          |           | name attribute for the `value` input|
 | resultsProperty       | String             |          |           | property api results are keyed under|
