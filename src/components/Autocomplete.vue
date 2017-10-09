@@ -38,8 +38,8 @@
             v-for="(result, key) in results"
             @click.prevent="select(result)"
             class="autocomplete__results__item"
-            :class="{'autocomplete__selected' : isSelected(key) }">
-          {{ displayProperty(result) }}
+            :class="{'autocomplete__selected' : isSelected(key) }"
+            v-html="formatDisplay(result)">
         </li>
 
         <!-- no results -->
@@ -281,7 +281,7 @@ export default {
       }
 
       this.results = this.source.filter((item) => {
-        return this.displayProperty(item).toLowerCase().includes(this.display.toLowerCase())
+        return this.formatDisplay(item).toLowerCase().includes(this.display.toLowerCase())
       })
       // not v.dry :(
       this.$emit('results', {results: this.results})
@@ -308,7 +308,7 @@ export default {
 
     setValues (obj) {
       this.value = (this.resultsValue && obj[this.resultsValue]) ? obj[this.resultsValue] : obj.id
-      this.display = this.displayProperty(obj)
+      this.display = this.formatDisplay(obj)
       this.selectedDisplay = this.display
     },
 
@@ -316,7 +316,7 @@ export default {
      * @param  {Object} obj
      * @return {String}
      */
-    displayProperty (obj) {
+    formatDisplay (obj) {
       return typeof this.resultsDisplay === 'function'
         ? this.resultsDisplay(obj)
         : obj[this.resultsDisplay] ? obj[this.resultsDisplay] : obj.name

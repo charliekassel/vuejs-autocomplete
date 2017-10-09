@@ -121,7 +121,7 @@
     </div>
 
     <div class="demo">
-      <h3>Using function for resultsDisplay</h3>
+      <h3>Using function for resultsDisplay and returning html</h3>
 
       <div class="example">
         <h5>Example</h5>
@@ -186,7 +186,7 @@ export default {
     },
 
     formatDisplay (result) {
-      return result.stargazers_count + '* ' + result.full_name
+      return result.full_name + ' <strong>[' + result.stargazers_count + ']</strong>'
     }
   }
 }
