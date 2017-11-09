@@ -47,7 +47,8 @@
           :initial-display="'abc'"
           :initial-value="1"
           @selected="setObjValue"
-          @clear="setObjValue({})">
+          @clear="setObjValue({})"
+          :showNoResults="false">
         </autocomplete>
 
         <div class="results" v-if="objectResults">
@@ -115,6 +116,27 @@
       results-display="login"
       @noResults="ask = true"&gt;
       &lt;li v-if="ask" slot="results" class="autocomplete__results__item" @click="create"&gt;Click to create a new one&lt;/li&gt;
+    &lt;/autocomplete&gt;
+        </code>
+      </div>
+    </div>
+
+    <div class="demo">
+      <h3>Adding an always present result item with a <em>slot</em></h3>
+      <div class="example">
+        <autocomplete
+          :source="'https://api.github.com/search/users?q='"
+          results-property="items"
+          results-display="login">
+          <li slot="lastResult" class="autocomplete__results__item" @click="create">Click to create a new one</li>
+        </autocomplete>
+
+        <code>
+    &lt;autocomplete
+      :source="'https://api.github.com/search/users?q='"
+      results-property="items"
+      results-display="login"&gt;
+      &lt;li slot="lastResult" class="autocomplete__results__item" @click="create"&gt;Click to create a new one&lt;/li&gt;
     &lt;/autocomplete&gt;
         </code>
       </div>

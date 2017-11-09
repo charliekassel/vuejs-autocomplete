@@ -34,16 +34,21 @@
         <li v-if="hasError" class="autocomplete__results__item autocomplete__results__item--error">{{ error }}</li>
 
         <!-- results -->
-        <li v-if="!hasError"
-            v-for="(result, key) in results"
-            @click.prevent="select(result)"
-            class="autocomplete__results__item"
-            :class="{'autocomplete__selected' : isSelected(key) }"
-            v-html="formatDisplay(result)">
-        </li>
+        <template v-if="!hasError">
+          <slot name="firstResult"></slot>          
+          <li
+              v-for="(result, key) in results"
+              :key="key"
+              @click.prevent="select(result)"
+              class="autocomplete__results__item"
+              :class="{'autocomplete__selected' : isSelected(key) }"
+              v-html="formatDisplay(result)">
+          </li>
+          <slot name="lastResult"></slot>
+        </template>
 
         <!-- no results -->
-        <li v-if="noResults && !isLoading && isFocussed && !hasError" class="autocomplete__results__item autocomplete__no-results">Nothing found.</li>
+        <li v-if="noResults && !isLoading && isFocussed && !hasError && showNoResults" class="autocomplete__results__item autocomplete__no-results">Nothing found.</li>
       </slot>
     </ul>
   </div>
@@ -55,64 +60,55 @@ export default {
   props: {
     /**
      * Data source for the results
-     * @type {String|Object}
      */
     source: {
-      type: [Object, Array, String],
+      type: [String, Array, Object],
       required: true
     },
     /**
      * Input placeholder
-     * @type {String}
      */
     placeholder: {
       default: 'Search'
     },
     /**
      * Preset starting value
-     * @type {String|Number}
      */
     initialValue: {
       type: [String, Number]
     },
     /**
      * Preset starting display value
-     * @type {String}
      */
     initialDisplay: {
       type: String
     },
     /**
      * CSS class for the surrounding input div
-     * @type {String|Object}
      */
     inputClass: {
       type: [String, Object]
     },
     /**
      * To disable the input
-     * @type {Boolean}
      */
     disableInput: {
       type: Boolean
     },
     /**
      * name property of the input holding the selected value
-     * @type {String}
      */
     name: {
       type: String
     },
     /**
      * api - property of results array
-     * @type {String}
      */
     resultsProperty: {
       type: String
     },
     /**
      * Results property used as the value
-     * @type {String}
      */
     resultsValue: {
       type: String,
@@ -120,7 +116,6 @@ export default {
     },
     /**
      * Results property used as the display
-     * @type {String}
      */
     resultsDisplay: {
       type: [String, Function],
@@ -128,8 +123,15 @@ export default {
     },
 
     /**
+     * Whether to show the no results message
+     */
+    showNoResults: {
+      type: Boolean,
+      default: true
+    },
+
+    /**
      * Additional request headers
-     * @type {Object}
      */
     requestHeaders: {
       type: Object
@@ -140,7 +142,7 @@ export default {
       value: null,
       display: null,
       results: null,
-      selectedIndex: 0,
+      selectedIndex: null,
       loading: false,
       isFocussed: false,
       error: null,
@@ -184,6 +186,7 @@ export default {
       return key === this.selectedIndex
     },
     search () {
+      this.selectedIndex = null
       switch (typeof this.source) {
         case 'string':
           // No resource search with no input
@@ -326,10 +329,15 @@ export default {
       this.selectedIndex = (this.selectedIndex === 0) ? this.results.length - 1 : this.selectedIndex - 1
     },
     down () {
+      if (this.selectedIndex === null) {
+        this.selectedIndex = 0
+        return
+      }
       this.selectedIndex = (this.selectedIndex === this.results.length - 1) ? 0 : this.selectedIndex + 1
     },
     enter () {
       this.select(this.results[this.selectedIndex])
+      this.$emit('enter', this.display)
     },
     clear () {
       this.clearValues()
@@ -429,6 +437,7 @@ export default {
 
 .autocomplete__results__item
   padding 7px 10px
+  cursor pointer
   &:hover
     background rgba(0, 180, 255, 0.075)
   &.autocomplete__selected

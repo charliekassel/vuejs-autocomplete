@@ -58,19 +58,20 @@ methods: {
 ```
 ## Available props
 
-| Prop                  | Type               | Required | Default   | Description|
-|-----------------------|--------------------|----------|-----------|------------|
+| Prop                  | Type                 | Required | Default   | Description|
+|-----------------------|----------------------|----------|-----------|------------|
 | source                | String\|Object\|Array| true     |           | data source for the results|
-| placeholder           | String             |          | 'Search'  | input placeholder|
-| initialValue          | String\|Number      |          |           | starting value|
-| initialDisplay        | String             |          |           | starting display value|
-| inputClass            | String\|Object      |          |           | css class for the input div|
-| disableInput          | Boolean            |          |           | to disable the input|
-| name                  | String             |          |           | name attribute for the `value` input|
-| resultsProperty       | String             |          |           | property api results are keyed under|
-| resultsValue          | String             |          |           | property to use for the `value`|
-| resultsDisplay        | String             |          |           | property to use for the `display`|
-| requestHeaders        | Object             |          |           | extra headers appended to the request|
+| placeholder           | String               |          | 'Search'  | input placeholder|
+| initialValue          | String\|Number       |          |           | starting value|
+| initialDisplay        | String               |          |           | starting display value|
+| inputClass            | String\|Object       |          |           | css class for the input div|
+| disableInput          | Boolean              |          |           | to disable the input|
+| name                  | String               |          |           | name attribute for the `value` input|
+| resultsProperty       | String               |          |           | property api results are keyed under|
+| resultsValue          | String               |          |           | property to use for the `value`|
+| resultsDisplay        | String               |          |           | property to use for the `display`|
+| requestHeaders        | Object               |          |           | extra headers appended to the request|
+| showNoResults         | Boolean              |          | true      | To show a message that no results were found|
 
 ## Available events
 
@@ -82,3 +83,4 @@ methods: {
 | input    | String\|Number | The value when an item is selected |
 | clear    |                | When selected results are cleared |
 | close    |                | When the options list is closed |
+| enter    | String         | Emits the input value when enter is pressed |
