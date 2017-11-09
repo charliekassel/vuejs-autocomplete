@@ -351,6 +351,7 @@ export default {
     clearValues () {
       this.display = null
       this.value = null
+      this.results = null
     },
     close () {
       if (!this.value || !this.selectedDisplay) {
