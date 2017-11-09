@@ -336,8 +336,11 @@ export default {
       this.selectedIndex = (this.selectedIndex === this.results.length - 1) ? 0 : this.selectedIndex + 1
     },
     enter () {
+      if (this.selectedIndex === null) {
+        this.$emit('enter', this.display)
+        return
+      }
       this.select(this.results[this.selectedIndex])
-      this.$emit('enter', this.display)
     },
     clear () {
       this.clearValues()
