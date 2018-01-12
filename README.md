@@ -37,6 +37,13 @@ Full featured example
 ```
 ``` javascript
 // parent component
+computed: {
+  authHeaders () {
+    return {
+      'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1Ni....'
+    }
+  },
+},
 methods: {
   distributionGroupsEndpoint () {
     return process.env.API + '/distribution/search?query='
