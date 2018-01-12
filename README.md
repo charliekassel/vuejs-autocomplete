@@ -72,6 +72,7 @@ methods: {
 | resultsDisplay        | String               |          |           | property to use for the `display`|
 | requestHeaders        | Object               |          |           | extra headers appended to the request|
 | showNoResults         | Boolean              |          | true      | To show a message that no results were found|
+| clearButtonIcon       | String               |          |           | Optionally provide an icon css class|
 
 ## Available events
 

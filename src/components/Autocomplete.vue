@@ -24,7 +24,11 @@
 
       </div>
 
-      <img v-show="!disableInput && !isEmpty && !isLoading && !hasError" class="autocomplete__icon autocomplete--clear" @click="clear" src="../assets/close.svg">
+      <span v-show="!disableInput && !isEmpty && !isLoading && !hasError" class="autocomplete__icon autocomplete--clear" @click="clear">
+        <span v-if="clearButtonIcon" :class="clearButtonIcon"></span>
+        <img v-else src="../assets/close.svg">
+      </span>
+        <!-- clearButtonIcon -->
     </div>
 
     <ul v-show="showResults" class="autocomplete__results" :style="listStyle">
@@ -35,7 +39,7 @@
 
         <!-- results -->
         <template v-if="!hasError">
-          <slot name="firstResult"></slot>          
+          <slot name="firstResult"></slot>
           <li
               v-for="(result, key) in results"
               :key="key"
@@ -135,6 +139,13 @@ export default {
      */
     requestHeaders: {
       type: Object
+    },
+
+    /**
+     * Optional clear button icon class
+     */
+    clearButtonIcon: {
+      type: String
     }
   },
   data () {
