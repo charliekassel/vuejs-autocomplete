@@ -347,6 +347,10 @@ export default {
     },
 
     up () {
+      if (this.selectedIndex === null) {
+        this.selectedIndex = this.results.length - 1
+        return
+      }
       this.selectedIndex = (this.selectedIndex === 0) ? this.results.length - 1 : this.selectedIndex - 1
     },
     down () {
