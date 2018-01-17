@@ -331,9 +331,19 @@ export default {
      * @return {String}
      */
     formatDisplay (obj) {
-      return typeof this.resultsDisplay === 'function'
-        ? this.resultsDisplay(obj)
-        : obj[this.resultsDisplay] ? obj[this.resultsDisplay] : obj.name
+      switch (typeof this.resultsDisplay) {
+        case 'function':
+          return this.resultsDisplay(obj)
+        case 'string':
+          if (obj[this.resultsDisplay]) {
+            return obj[this.resultsDisplay]
+          } else {
+            let msg = '"' + this.resultsDisplay + '"' + ' property expected on result but is not defined.'
+            throw new Error(msg)
+          }
+        default:
+          throw new TypeError()
+      }
     },
 
     up () {
