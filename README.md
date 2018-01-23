@@ -65,21 +65,21 @@ methods: {
 ```
 ## Available props
 
-| Prop                  | Type                 | Required | Default   | Description|
-|-----------------------|----------------------|----------|-----------|------------|
-| source                | String\|Object\|Array| true     |           | data source for the results|
-| placeholder           | String               |          | 'Search'  | input placeholder|
-| initialValue          | String\|Number       |          |           | starting value|
-| initialDisplay        | String               |          |           | starting display value|
-| inputClass            | String\|Object       |          |           | css class for the input div|
-| disableInput          | Boolean              |          |           | to disable the input|
-| name                  | String               |          |           | name attribute for the `value` input|
-| resultsProperty       | String               |          |           | property api results are keyed under|
-| resultsValue          | String               |          | 'id'      | property to use for the `value`|
-| resultsDisplay        | String               |          | 'name'    | property to use for the `display`|
-| requestHeaders        | Object               |          |           | extra headers appended to the request|
-| showNoResults         | Boolean              |          | true      | To show a message that no results were found|
-| clearButtonIcon       | String               |          |           | Optionally provide an icon css class|
+| Prop                  | Type                        | Required | Default   | Description |
+|-----------------------|-----------------------------|----------|-----------|-------------|
+| source                | String\|Func\|Object\|Array |          | true      | data source for the results|
+| placeholder           | String                      |          | 'Search'  | input placeholder|
+| initialValue          | String\|Number              |          |           | starting value|
+| initialDisplay        | String                      |          |           | starting display value|
+| inputClass            | String\|Object              |          |           | css class for the input div|
+| disableInput          | Boolean                     |          |           | to disable the input|
+| name                  | String                      |          |           | name attribute for the `value` input|
+| resultsProperty       | String                      |          |           | property api results are keyed under|
+| resultsValue          | String                      |          | 'id'      | property to use for the `value`|
+| resultsDisplay        | String                      |          | 'name'    | property to use for the `display`|
+| requestHeaders        | Object                      |          |           | extra headers appended to the request|
+| showNoResults         | Boolean                     |          | true      | To show a message that no results were found|
+| clearButtonIcon       | String                      |          |           | Optionally provide an icon css class|
 
 ## Available events
 
