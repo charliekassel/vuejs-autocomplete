@@ -6,6 +6,21 @@
 
 ## Usage
 
+Installation, add autocomplete component into your app
+
+```javascript
+import Vue from 'vue';
+import Autocomplete from 'vuejs-auto-complete';
+
+new Vue({ 
+  //...
+  components: {
+    Autocomplete,
+  },
+  //...
+})
+```
+
 Api data source
 ``` html
 <autocomplete
