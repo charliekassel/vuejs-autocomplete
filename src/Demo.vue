@@ -9,7 +9,7 @@
       <p>If results are returned under a specific key you can set that via <em>apiResultsProperty</em> key</p>
 
       <div class="example">
-        <h5>Example</h5>
+        <h5>Example string source</h5>
         <autocomplete
           source="https://api.github.com/search/repositories?q="
           results-property="items"
@@ -18,11 +18,6 @@
           @clear="setXHRValue({})">
         </autocomplete>
 
-        <div class="results" v-if="apiResults">
-          <p>Results:</p>
-          <pre>{{ apiResults }}</pre>
-        </div>
-
         <code>
     &lt;autocomplete
       source="https://api.github.com/search/repositories?q="
@@ -30,6 +25,37 @@
       results-display="full_name"&gt;
     &lt;/autocomplete&gt;
         </code>
+
+        <br>
+
+        <h5>Example string-valued function</h5>
+        <autocomplete
+          :source="urlFunction"
+          results-property="items"
+          results-display="full_name"
+          @selected="setXHRValue"
+          @clear="setXHRValue({})">
+        </autocomplete>
+
+        <code>
+    &lt;autocomplete
+      :source="urlFunction"
+      results-property="items"
+      results-display="full_name"&gt;
+    &lt;/autocomplete&gt;
+
+    methods: {
+      urlFunction (input) {
+        return 'https://api.github.com/search/repositories?q=' + input
+      }
+    }
+        </code>
+
+        <div class="results" v-if="apiResults">
+          <p>Results:</p>
+          <pre>{{ apiResults }}</pre>
+        </div>
+
 
       </div>
     </div>
@@ -192,6 +218,9 @@ export default {
     }
   },
   methods: {
+    urlFunction (input) {
+      return 'https://api.github.com/search/repositories?q=' + input
+    },
     setObjValue (obj) {
       this.objectResults = obj
     },
