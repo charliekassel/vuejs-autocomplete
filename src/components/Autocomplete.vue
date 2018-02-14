@@ -30,7 +30,8 @@
       </span>
     </div>
 
-    <ul v-show="showResults" class="autocomplete__results" :style="listStyle">
+    <ul v-show="showResults" class="autocomplete__results" :style="listStyle" ref="resultsList">
+
       <slot name="results">
         <!-- error -->
         <li v-if="hasError" class="autocomplete__results__item autocomplete__results__item--error">{{ error }}</li>
@@ -385,22 +386,54 @@ export default {
      * Focus on the previous results item
      */
     up () {
-      if (this.selectedIndex === null) {
+      let resultsList = this.$refs.resultsList
+
+      if (this.selectedIndex === null || this.selectedIndex === 0) {
         this.selectedIndex = this.results.length - 1
-        return
+        resultsList.scrollTop = resultsList.scrollHeight - resultsList.clientHeight
+      } else {
+        let [ selectedElement ] = resultsList.getElementsByClassName('autocomplete__selected')
+        this.selectedIndex -= 1
+        if (!this.isVisibleInside(resultsList, selectedElement, -1)) {
+          resultsList.scrollTop -= selectedElement.clientHeight
+        }
       }
-      this.selectedIndex = (this.selectedIndex === 0) ? this.results.length - 1 : this.selectedIndex - 1
     },
 
     /**
      * Focus on the next results item
      */
     down () {
-      if (this.selectedIndex === null) {
+      let resultsList = this.$refs.resultsList
+
+      if (this.selectedIndex === null || this.selectedIndex === this.results.length - 1) {
         this.selectedIndex = 0
-        return
+        resultsList.scrollTop = 0
+      } else {
+        let [ selectedElement ] = resultsList.getElementsByClassName('autocomplete__selected')
+        this.selectedIndex += 1
+        if (!this.isVisibleInside(resultsList, selectedElement, 1)) {
+          resultsList.scrollTop += selectedElement.clientHeight
+        }
       }
-      this.selectedIndex = (this.selectedIndex === this.results.length - 1) ? 0 : this.selectedIndex + 1
+    },
+    /**
+     * Determine if an element is (or will be) visible within parent client
+     * dimensions for scrolling purposes.
+     * @param {Object} parentElement
+     * @param {Object} childElement
+     * @param {Integer} offset
+     * @return {Boolean}
+     */
+    isVisibleInside (parentElement, childElement, offset) {
+      let parent = parentElement.getBoundingClientRect()
+      let child = childElement.getBoundingClientRect()
+      let childTop = child.top + (childElement.clientHeight * offset)
+      let childBottom = child.bottom + (childElement.clientHeight * offset)
+      return (
+        childTop >= parent.top &&
+        childBottom <= parent.bottom
+      )
     },
 
     /**
