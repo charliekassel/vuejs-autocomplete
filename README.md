@@ -98,12 +98,13 @@ methods: {
 
 ## Available events
 
-| Event    | Output         | Description |
-|----------|----------------|-------------|
-| results  | Object         | Results returned from a search |
-| noResults| Object         | When no results are returned |
-| selected | Object         | When an item is selected |
-| input    | String\|Number | The value when an item is selected |
-| clear    |                | When selected results are cleared |
-| close    |                | When the options list is closed |
-| enter    | String         | Emits the input value when enter is pressed |
+| Event       | Output                | Description |
+|----------   |----------------       |-------------|
+| results     | Object                | Results returned from a search |
+| noResults   | Object                | When no results are returned |
+| selected    | Object                | When an item is selected |
+| input       | String\Number, Event  | The value when an item is selected |
+| handleInput | String\|Number        | The value + event on keyup |
+| clear       |                       | When selected results are cleared |
+| close       |                       | When the options list is closed |
+| enter       | String                | Emits the input value when enter is pressed |
