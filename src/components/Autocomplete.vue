@@ -13,6 +13,7 @@
           :disabled="disableInput"
           @click="search"
           @input="search"
+          @keyup="handleInputChange"
           @keydown.enter="enter"
           @keydown.tab="close"
           @keydown.up="up"
@@ -228,7 +229,11 @@ export default {
           throw new TypeError()
       }
     },
-
+    handleInputChange (event) {
+      if (this.$listeners.handleInput) {
+        this.$listeners.handleInput(this.display, event)
+      }
+    },
     resourceSearch: debounce(function (url) {
       if (!this.display) {
         this.results = []
