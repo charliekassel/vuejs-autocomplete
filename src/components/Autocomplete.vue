@@ -230,7 +230,9 @@ export default {
       }
     },
     handleInputChange (event) {
-      this.$listeners.handleInput(this.display, event)
+      if (this.$listeners.handleInput) {
+        this.$listeners.handleInput(this.display, event)
+      }
     },
     resourceSearch: debounce(function (url) {
       if (!this.display) {
