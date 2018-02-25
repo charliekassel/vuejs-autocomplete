@@ -19,7 +19,7 @@
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
-    "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
+    "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit/specs",
     "prepublish": "npm run build"
@@ -32,6 +32,7 @@
     "url": "https://github.com/charliekassel/vuejs-autocomplete/issues"
   },
   "dependencies": {
+    "@vue/test-utils": "^1.0.0-beta.12",
     "lodash": "^4.17.4",
     "vue": "^2.3.3"
   },
@@ -89,6 +90,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "url-loader": "^0.5.8",
+    "vue-jest": "^2.1.0",
     "vue-loader": "^12.1.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.3.3",

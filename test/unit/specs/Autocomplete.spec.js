@@ -1,21 +1,17 @@
-import Vue from 'vue'
 import Autocomplete from '@/components/Autocomplete'
+import {shallow} from '@vue/test-utils'
 
-function getViewModel (props) {
-  const Constructor = Vue.extend(Autocomplete)
-  return new Constructor({propsData: props}).$mount()
-}
-
-describe('Autocomplete.vue', () => {
-  let vm
+describe('Renders an input', () => {
+  let wrapper
   beforeEach(() => {
-    vm = getViewModel({
-      source: []
+    wrapper = shallow(Autocomplete, {
+      propsData: {
+        source: 'localhost'
+      }
     })
   })
 
   it('should render correct contents', () => {
-    expect(vm.$el.querySelector('input'))
-      .to.be.defined
+    expect(wrapper.find('input')).toBeTruthy()
   })
 })
