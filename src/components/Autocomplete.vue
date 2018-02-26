@@ -199,28 +199,25 @@ export default {
     },
     search () {
       this.selectedIndex = null
-      switch (typeof this.source) {
-        case 'string':
+      this.loading = true
+      switch (true) {
+        case typeof this.source === 'string':
           // No resource search with no input
           if (!this.display || this.display.length < 1) {
             return
           }
-          this.loading = true
 
           this.resourceSearch(this.source + this.display)
           break
-        case 'function':
+        case typeof this.source === 'function':
           // No resource search with no input
           if (!this.display || this.display.length < 1) {
             return
           }
-          this.loading = true
-
           this.resourceSearch(this.source(this.display))
           break
-        case 'object':
-          this.loading = true
-          this.objectSearch()
+        case Array.isArray(this.source):
+          this.arrayLikeSearch()
           break
         default:
           throw new TypeError()
@@ -295,7 +292,7 @@ export default {
       return []
     },
 
-    objectSearch () {
+    arrayLikeSearch () {
       this.setEventListener()
 
       if (!this.display) {
@@ -308,7 +305,7 @@ export default {
       this.results = this.source.filter((item) => {
         return this.formatDisplay(item).toLowerCase().includes(this.display.toLowerCase())
       })
-      // not v.dry :(
+
       this.$emit('results', {results: this.results})
       this.loading = false
     },
