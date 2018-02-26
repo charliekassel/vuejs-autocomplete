@@ -21,18 +21,16 @@
           @focus="focus"
           @blur="blur">
         <input :name="name" type="hidden" :value="value">
-
       </div>
 
+      <!-- clearButtonIcon -->
       <span v-show="!disableInput && !isEmpty && !isLoading && !hasError" class="autocomplete__icon autocomplete--clear" @click="clear">
         <span v-if="clearButtonIcon" :class="clearButtonIcon"></span>
         <img v-else src="../assets/close.svg">
       </span>
-        <!-- clearButtonIcon -->
     </div>
 
     <ul v-show="showResults" class="autocomplete__results" :style="listStyle">
-
       <slot name="results">
         <!-- error -->
         <li v-if="hasError" class="autocomplete__results__item autocomplete__results__item--error">{{ error }}</li>
@@ -351,7 +349,7 @@ export default {
           if (obj[this.resultsDisplay]) {
             return obj[this.resultsDisplay]
           } else {
-            let msg = '"' + this.resultsDisplay + '"' + ' property expected on result but is not defined.'
+            let msg = `"${this.resultsDisplay}" property expected on result but is not defined.`
             throw new Error(msg)
           }
         default:
