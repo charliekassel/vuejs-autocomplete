@@ -207,15 +207,15 @@ export default {
             return
           }
 
-          this.resourceSearch(this.source + this.display)
-          break
+          return this.resourceSearch(this.source + this.display)
+          // break
         case typeof this.source === 'function':
           // No resource search with no input
           if (!this.display || this.display.length < 1) {
             return
           }
-          this.resourceSearch(this.source(this.display))
-          break
+          return this.resourceSearch(this.source(this.display))
+          // break
         case Array.isArray(this.source):
           this.arrayLikeSearch()
           break
@@ -230,7 +230,11 @@ export default {
         this.loading = false
         return
       }
+      this.setEventListener()
+      this.request(url)
+    }, 200),
 
+    request (url) {
       // query param should be a setting, rather than appended.
       let promise = fetch(url, {
         method: 'get',
@@ -238,9 +242,7 @@ export default {
         headers: this.getHeaders()
       })
 
-      this.setEventListener()
-
-      promise
+      return promise
         .then(response => {
           if (response.ok) {
             this.error = null
@@ -261,7 +263,7 @@ export default {
           this.error = error.message
           this.loading = false
         })
-    }, 200),
+    },
 
     getHeaders () {
       const headers = {
