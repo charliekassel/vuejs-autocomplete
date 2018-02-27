@@ -199,7 +199,6 @@ export default {
     },
     search () {
       this.selectedIndex = null
-      this.loading = true
       switch (true) {
         case typeof this.source === 'string':
           // No resource search with no input
@@ -227,9 +226,9 @@ export default {
     resourceSearch: debounce(function (url) {
       if (!this.display) {
         this.results = []
-        this.loading = false
         return
       }
+      this.loading = true
       this.setEventListener()
       this.request(url)
     }, 200),

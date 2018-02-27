@@ -29,6 +29,11 @@ describe('Search Results - Resource', () => {
     expect(spy).toHaveBeenCalledTimes(1)
   })
 
+  it('should not search without display data', () => {
+    const spy = jest.spyOn(wrapper.vm, 'resourceSearch')
+    expect(spy).toHaveBeenCalledTimes(0)
+  })
+
   it('should show no results', () => {
     fetch.mockResponse(JSON.stringify({data: []}))
     wrapper.vm.request('localhost').then(() => {
