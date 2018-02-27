@@ -1,5 +1,7 @@
 # vuejs-auto-complete
 
+![](https://travis-ci.org/charliekassel/vuejs-autocomplete.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/charliekassel/vuejs-autocomplete/badge.svg?branch=master)](https://coveralls.io/github/charliekassel/vuejs-autocomplete?branch=master)
+
 > A Vue autocomplete component
 
 `npm install vuejs-auto-complete --save`
