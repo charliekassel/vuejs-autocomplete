@@ -109,3 +109,11 @@ methods: {
 | clear    |                | When selected results are cleared |
 | close    |                | When the options list is closed |
 | enter    | String         | Emits the input value when enter is pressed |
+
+## Available Slots
+
+| Slot        | Description |
+|-------------|-------------|
+| firstResult | list item placed before all results |
+| lastResult  | list item placed at the end of the results |
+| noResults   | list item shown when no results are present |

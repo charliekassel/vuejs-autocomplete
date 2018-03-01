@@ -50,7 +50,9 @@
         </template>
 
         <!-- no results -->
-        <li v-if="noResults && !isLoading && isFocussed && !hasError && showNoResults" class="autocomplete__results__item autocomplete__no-results">Nothing found.</li>
+        <li v-if="noResultMessage" class="autocomplete__results__item autocomplete__no-results">
+          <slot name="noResults">No Results.</slot>
+        </li>
       </slot>
     </ul>
   </div>
@@ -169,6 +171,13 @@ export default {
     },
     noResults () {
       return Array.isArray(this.results) && this.results.length === 0
+    },
+    noResultMessage () {
+      return this.noResults &&
+        !this.isLoading &&
+        this.isFocussed &&
+        !this.hasError &&
+        this.showNoResults
     },
     isEmpty () {
       return !this.display
