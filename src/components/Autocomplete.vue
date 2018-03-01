@@ -21,18 +21,16 @@
           @focus="focus"
           @blur="blur">
         <input :name="name" type="hidden" :value="value">
-
       </div>
 
+      <!-- clearButtonIcon -->
       <span v-show="!disableInput && !isEmpty && !isLoading && !hasError" class="autocomplete__icon autocomplete--clear" @click="clear">
         <span v-if="clearButtonIcon" :class="clearButtonIcon"></span>
         <img v-else src="../assets/close.svg">
       </span>
-        <!-- clearButtonIcon -->
     </div>
 
     <ul v-show="showResults" class="autocomplete__results" :style="listStyle">
-
       <slot name="results">
         <!-- error -->
         <li v-if="hasError" class="autocomplete__results__item autocomplete__results__item--error">{{ error }}</li>
@@ -52,7 +50,9 @@
         </template>
 
         <!-- no results -->
-        <li v-if="noResults && !isLoading && isFocussed && !hasError && showNoResults" class="autocomplete__results__item autocomplete__no-results">Nothing found.</li>
+        <li v-if="noResultMessage" class="autocomplete__results__item autocomplete__no-results">
+          <slot name="noResults">No Results.</slot>
+        </li>
       </slot>
     </ul>
   </div>
@@ -172,6 +172,13 @@ export default {
     noResults () {
       return Array.isArray(this.results) && this.results.length === 0
     },
+    noResultMessage () {
+      return this.noResults &&
+        !this.isLoading &&
+        this.isFocussed &&
+        !this.hasError &&
+        this.showNoResults
+    },
     isEmpty () {
       return !this.display
     },
@@ -201,28 +208,24 @@ export default {
     },
     search () {
       this.selectedIndex = null
-      switch (typeof this.source) {
-        case 'string':
+      switch (true) {
+        case typeof this.source === 'string':
           // No resource search with no input
           if (!this.display || this.display.length < 1) {
             return
           }
-          this.loading = true
 
-          this.resourceSearch(this.source + this.display)
-          break
-        case 'function':
+          return this.resourceSearch(this.source + this.display)
+          // break
+        case typeof this.source === 'function':
           // No resource search with no input
           if (!this.display || this.display.length < 1) {
             return
           }
-          this.loading = true
-
-          this.resourceSearch(this.source(this.display))
-          break
-        case 'object':
-          this.loading = true
-          this.objectSearch()
+          return this.resourceSearch(this.source(this.display))
+          // break
+        case Array.isArray(this.source):
+          this.arrayLikeSearch()
           break
         default:
           throw new TypeError()
@@ -232,10 +235,14 @@ export default {
     resourceSearch: debounce(function (url) {
       if (!this.display) {
         this.results = []
-        this.loading = false
         return
       }
+      this.loading = true
+      this.setEventListener()
+      this.request(url)
+    }, 200),
 
+    request (url) {
       // query param should be a setting, rather than appended.
       let promise = fetch(url, {
         method: 'get',
@@ -243,9 +250,7 @@ export default {
         headers: this.getHeaders()
       })
 
-      this.setEventListener()
-
-      promise
+      return promise
         .then(response => {
           if (response.ok) {
             this.error = null
@@ -266,7 +271,7 @@ export default {
           this.error = error.message
           this.loading = false
         })
-    }, 200),
+    },
 
     getHeaders () {
       const headers = {
@@ -297,7 +302,7 @@ export default {
       return []
     },
 
-    objectSearch () {
+    arrayLikeSearch () {
       this.setEventListener()
 
       if (!this.display) {
@@ -310,7 +315,7 @@ export default {
       this.results = this.source.filter((item) => {
         return this.formatDisplay(item).toLowerCase().includes(this.display.toLowerCase())
       })
-      // not v.dry :(
+
       this.$emit('results', {results: this.results})
       this.loading = false
     },
@@ -351,7 +356,7 @@ export default {
           if (obj[this.resultsDisplay]) {
             return obj[this.resultsDisplay]
           } else {
-            let msg = '"' + this.resultsDisplay + '"' + ' property expected on result but is not defined.'
+            let msg = `"${this.resultsDisplay}" property expected on result but is not defined.`
             throw new Error(msg)
           }
         default:

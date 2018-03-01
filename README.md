@@ -1,5 +1,7 @@
 # vuejs-auto-complete
 
+![](https://travis-ci.org/charliekassel/vuejs-autocomplete.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/charliekassel/vuejs-autocomplete/badge.svg?branch=master)](https://coveralls.io/github/charliekassel/vuejs-autocomplete?branch=master)
+
 > A Vue autocomplete component
 
 `npm install vuejs-auto-complete --save`
@@ -91,7 +93,7 @@ methods: {
 | name                  | String                      |          |           | name attribute for the `value` input|
 | resultsProperty       | String                      |          |           | property api results are keyed under|
 | resultsValue          | String                      |          | 'id'      | property to use for the `value`|
-| resultsDisplay        | String                      |          | 'name'    | property to use for the `display`|
+| resultsDisplay        | String\|Function            |          | 'name'    | property to use for the `display` or custom function|
 | requestHeaders        | Object                      |          |           | extra headers appended to the request|
 | showNoResults         | Boolean                     |          | true      | To show a message that no results were found|
 | clearButtonIcon       | String                      |          |           | Optionally provide an icon css class|
@@ -107,3 +109,11 @@ methods: {
 | clear    |                | When selected results are cleared |
 | close    |                | When the options list is closed |
 | enter    | String         | Emits the input value when enter is pressed |
+
+## Available Slots
+
+| Slot        | Description |
+|-------------|-------------|
+| firstResult | list item placed before all results |
+| lastResult  | list item placed at the end of the results |
+| noResults   | list item shown when no results are present |
