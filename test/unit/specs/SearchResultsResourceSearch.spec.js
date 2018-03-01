@@ -41,6 +41,6 @@ describe('Search Results - Resource', () => {
       expect(wrapper.emitted().noResults).toBeTruthy()
       expect(wrapper.find('.autocomplete__no-results')).toBeDefined()
       expect(wrapper.find('.autocomplete__no-results').text()).toEqual('Nothing found.')
-    })
+    }).catch(() => {})
   })
 })
