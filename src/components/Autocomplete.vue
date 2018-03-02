@@ -197,15 +197,9 @@ export default {
     }
   },
   methods: {
-    focus () {
-      this.isFocussed = true
-    },
-    blur () {
-      this.isFocussed = false
-    },
-    isSelected (key) {
-      return key === this.selectedIndex
-    },
+    /**
+     * Search wrapper method
+     */
     search () {
       this.selectedIndex = null
       switch (true) {
@@ -216,22 +210,23 @@ export default {
           }
 
           return this.resourceSearch(this.source + this.display)
-          // break
         case typeof this.source === 'function':
           // No resource search with no input
           if (!this.display || this.display.length < 1) {
             return
           }
           return this.resourceSearch(this.source(this.display))
-          // break
         case Array.isArray(this.source):
-          this.arrayLikeSearch()
-          break
+          return this.arrayLikeSearch()
         default:
           throw new TypeError()
       }
     },
 
+    /**
+     * Debounce the typed search query before making http requests
+     * @param {String} url
+     */
     resourceSearch: debounce(function (url) {
       if (!this.display) {
         this.results = []
@@ -242,8 +237,11 @@ export default {
       this.request(url)
     }, 200),
 
+    /**
+     * Make an http request for results
+     * @param {String} url
+     */
     request (url) {
-      // query param should be a setting, rather than appended.
       let promise = fetch(url, {
         method: 'get',
         credentials: 'same-origin',
@@ -273,12 +271,14 @@ export default {
         })
     },
 
+    /**
+     * Set some default headers and apply user supplied headers
+     */
     getHeaders () {
       const headers = {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       }
-
       if (this.requestHeaders) {
         for (var prop in this.requestHeaders) {
           headers[prop] = this.requestHeaders[prop]
@@ -302,42 +302,46 @@ export default {
       return []
     },
 
+    /**
+     * Search in results passed via an array
+     */
     arrayLikeSearch () {
       this.setEventListener()
-
       if (!this.display) {
         this.results = this.source
         this.$emit('results', {results: this.results})
         this.loading = false
         return true
       }
-
       this.results = this.source.filter((item) => {
         return this.formatDisplay(item).toLowerCase().includes(this.display.toLowerCase())
       })
-
       this.$emit('results', {results: this.results})
       this.loading = false
     },
 
+    /**
+     * Select a result
+     * @param {Object}
+     */
     select (obj) {
       if (!obj) {
         return
       }
-
       this.setValues(obj)
-
       this.$emit('selected', {
         value: this.value,
         display: this.display,
         selectedObject: obj
       })
-
       this.$emit('input', this.value)
-
       this.close()
     },
 
+    /**
+     * Sets as values for a selected item
+     * @param {Object}
+     */
     setValues (obj) {
       this.value = (this.resultsValue && obj[this.resultsValue]) ? obj[this.resultsValue] : obj.id
       this.display = this.formatDisplay(obj)
@@ -364,6 +368,32 @@ export default {
       }
     },
 
+    /**
+     * Register the component as focussed
+     */
+    focus () {
+      this.isFocussed = true
+    },
+
+    /**
+     * Remove the focussed value
+     */
+    blur () {
+      this.isFocussed = false
+    },
+
+    /**
+     * Is this item selected?
+     * @param {Object}
+     * @return {Boolean}
+     */
+    isSelected (key) {
+      return key === this.selectedIndex
+    },
+
+    /**
+     * Focus on the previous results item
+     */
     up () {
       if (this.selectedIndex === null) {
         this.selectedIndex = this.results.length - 1
@@ -371,6 +401,10 @@ export default {
       }
       this.selectedIndex = (this.selectedIndex === 0) ? this.results.length - 1 : this.selectedIndex - 1
     },
+
+    /**
+     * Focus on the next results item
+     */
     down () {
       if (this.selectedIndex === null) {
         this.selectedIndex = 0
@@ -378,6 +412,10 @@ export default {
       }
       this.selectedIndex = (this.selectedIndex === this.results.length - 1) ? 0 : this.selectedIndex + 1
     },
+
+    /**
+     * Select an item via the keyboard
+     */
     enter () {
       if (this.selectedIndex === null) {
         this.$emit('enter', this.display)
@@ -385,17 +423,21 @@ export default {
       }
       this.select(this.results[this.selectedIndex])
     },
+
+    /**
+     * Clear all values, results and errors
+     */
     clear () {
-      this.clearValues()
+      this.display = null
+      this.value = null
       this.results = null
       this.error = null
       this.$emit('clear')
     },
-    clearValues () {
-      this.display = null
-      this.value = null
-      this.results = null
-    },
+
+    /**
+     * Close the results list. If nothing was selected clear the search
+     */
     close () {
       if (!this.value || !this.selectedDisplay) {
         this.clear()
@@ -409,6 +451,10 @@ export default {
       this.removeEventListener()
       this.$emit('close')
     },
+
+    /**
+     * Add event listener for clicks outside the results
+     */
     setEventListener () {
       if (this.eventListener) {
         return false
@@ -417,10 +463,18 @@ export default {
       document.addEventListener('click', this.clickOutsideListener, true)
       return true
     },
+
+    /**
+     * Remove the click event listener
+     */
     removeEventListener () {
       this.eventListener = false
       document.removeEventListener('click', this.clickOutsideListener, true)
     },
+
+    /**
+     * Method invoked by the event listener
+     */
     clickOutsideListener (event) {
       if (this.$el && !this.$el.contains(event.target)) {
         this.close()
