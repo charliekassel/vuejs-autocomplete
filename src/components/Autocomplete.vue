@@ -357,12 +357,10 @@ export default {
         case 'function':
           return this.resultsDisplay(obj)
         case 'string':
-          if (obj[this.resultsDisplay]) {
-            return obj[this.resultsDisplay]
-          } else {
-            let msg = `"${this.resultsDisplay}" property expected on result but is not defined.`
-            throw new Error(msg)
+          if (!obj[this.resultsDisplay]) {
+            throw new Error(`"${this.resultsDisplay}" property expected on result but is not defined.`)
           }
+          return obj[this.resultsDisplay]
         default:
           throw new TypeError()
       }
