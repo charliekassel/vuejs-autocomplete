@@ -328,7 +328,9 @@ export default {
       if (!obj) {
         return
       }
-      this.setValues(obj)
+      this.value = (this.resultsValue && obj[this.resultsValue]) ? obj[this.resultsValue] : obj.id
+      this.display = this.formatDisplay(obj)
+      this.selectedDisplay = this.display
       this.$emit('selected', {
         value: this.value,
         display: this.display,
@@ -336,16 +338,6 @@ export default {
       })
       this.$emit('input', this.value)
       this.close()
-    },
-
-    /**
-     * Sets as values for a selected item
-     * @param {Object}
-     */
-    setValues (obj) {
-      this.value = (this.resultsValue && obj[this.resultsValue]) ? obj[this.resultsValue] : obj.id
-      this.display = this.formatDisplay(obj)
-      this.selectedDisplay = this.display
     },
 
     /**
@@ -416,10 +408,11 @@ export default {
      */
     enter () {
       if (this.selectedIndex === null) {
-        this.$emit('enter', this.display)
+        this.$emit('nothingSelected', this.display)
         return
       }
       this.select(this.results[this.selectedIndex])
+      this.$emit('enter', this.display)
     },
 
     /**
