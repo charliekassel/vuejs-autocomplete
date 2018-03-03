@@ -59,4 +59,78 @@ describe('Renders correct DOM', () => {
       wrapper.vm.formatDisplay([])
     }).toThrowError(TypeError)
   })
+
+  it('sets isFocussed property when the input is in focus', () => {
+    wrapper.find('input').trigger('focus')
+    expect(wrapper.vm.isFocussed).toEqual(true)
+  })
+
+  it('sets isFocussed property to false when the input is blurred', () => {
+    wrapper.setData({
+      isFocussed: true
+    })
+    wrapper.find('input').trigger('blur')
+    expect(wrapper.vm.isFocussed).toEqual(false)
+  })
+
+  it('setEventListener returns true when setting', () => {
+    expect(wrapper.vm.setEventListener()).toEqual(true)
+  })
+
+  it('setEventListener returns true when already set', () => {
+    wrapper.vm.setEventListener()
+    expect(wrapper.vm.setEventListener()).toEqual(false)
+  })
+
+  it('closes results list when clicked outside the component', () => {
+    wrapper.setProps({
+      source: [
+        {id: 1, name: 'abc'},
+        {id: 2, name: 'def'}
+      ]
+    })
+    wrapper.setData({
+      display: 'abc'
+    })
+    wrapper.vm.search()
+    expect(wrapper.vm.results).toHaveLength(1)
+    document.body.click()
+    expect(wrapper.vm.results).toBeFalsy()
+  })
+
+  it('clears display value when closing results', () => {
+    wrapper.setProps({
+      source: [
+        {id: 1, name: 'abc'},
+        {id: 2, name: 'def'}
+      ]
+    })
+    wrapper.setData({
+      display: 'abc'
+    })
+    wrapper.vm.search()
+    document.body.click()
+    expect(wrapper.vm.display).toBeNull()
+    expect(wrapper.vm.value).toBeNull()
+  })
+
+  it('retains initialValue when closing results list', () => {
+    wrapper = shallow(Autocomplete, {
+      propsData: {
+        source: [
+          {id: 1, name: 'abc'},
+          {id: 2, name: 'def'}
+        ],
+        initialDisplay: 'def',
+        initialValue: 2
+      }
+    })
+    wrapper.setData({
+      display: 'abc'
+    })
+    wrapper.vm.search()
+    document.body.click()
+    expect(wrapper.vm.display).toEqual('def')
+    expect(wrapper.vm.value).toEqual(2)
+  })
 })
