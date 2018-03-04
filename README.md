@@ -1,6 +1,9 @@
 # vuejs-auto-complete
 
-![](https://travis-ci.org/charliekassel/vuejs-autocomplete.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/charliekassel/vuejs-autocomplete/badge.svg?branch=master)](https://coveralls.io/github/charliekassel/vuejs-autocomplete?branch=master)
+[![Travis Build](https://img.shields.io/travis/charliekassel/vuejs-autocomplete.svg)](https://travis-ci.org/charliekassel/vuejs-autocomplete)
+[![Version](https://img.shields.io/npm/v/vuejs-auto-complete.svg)](https://www.npmjs.com/package/vuejs-auto-complete)
+[![Coveralls github](https://img.shields.io/coveralls/github/charliekassel/vuejs-autocomplete.svg)](https://coveralls.io/github/charliekassel/vuejs-autocomplete?branch=master)
+[![Downloads](https://img.shields.io/npm/dm/vuejs-auto-complete.svg)](https://www.npmjs.com/package/vuejs-auto-complete)
 
 > A Vue autocomplete component
 
