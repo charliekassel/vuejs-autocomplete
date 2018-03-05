@@ -1,5 +1,7 @@
 # vuejs-auto-complete
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/charliekassel/vuejs-autocomplete.svg)](https://greenkeeper.io/)
+
 [![Travis Build](https://img.shields.io/travis/charliekassel/vuejs-autocomplete.svg)](https://travis-ci.org/charliekassel/vuejs-autocomplete)
 [![Version](https://img.shields.io/npm/v/vuejs-auto-complete.svg)](https://www.npmjs.com/package/vuejs-auto-complete)
 [![Coveralls github](https://img.shields.io/coveralls/github/charliekassel/vuejs-autocomplete.svg)](https://coveralls.io/github/charliekassel/vuejs-autocomplete?branch=master)
