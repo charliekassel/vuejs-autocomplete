@@ -1,6 +1,6 @@
 # vuejs-auto-complete
 
-[![Travis Build](https://img.shields.io/travis/charliekassel/vuejs-autocomplete.svg)](https://travis-ci.org/charliekassel/vuejs-autocomplete)
+[![Travis Build](https://img.shields.io/travis/charliekassel/vuejs-autocomplete.svg?branch=master)](https://travis-ci.org/charliekassel/vuejs-autocomplete?branch=master)
 [![Version](https://img.shields.io/npm/v/vuejs-auto-complete.svg)](https://www.npmjs.com/package/vuejs-auto-complete)
 [![Coveralls github](https://img.shields.io/coveralls/github/charliekassel/vuejs-autocomplete.svg)](https://coveralls.io/github/charliekassel/vuejs-autocomplete?branch=master)
 [![Downloads](https://img.shields.io/npm/dm/vuejs-auto-complete.svg)](https://www.npmjs.com/package/vuejs-auto-complete)
