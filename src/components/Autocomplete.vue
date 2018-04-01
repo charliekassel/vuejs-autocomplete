@@ -197,11 +197,7 @@ export default {
       }
     },
     selectedElement () {
-      let resultsListElement = this.$refs.resultsList
-      let selectedIndexAsChild = this.selectedIndex + 1 // DOM children are 1-based.
-      let selectedElementSelector = `:nth-child(${selectedIndexAsChild})`
-      let selectedElement = resultsListElement.querySelector(selectedElementSelector)
-      return selectedElement
+      return this.$refs.resultsList.children[this.selectedIndex]
     }
   },
   methods: {
