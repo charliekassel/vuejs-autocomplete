@@ -195,6 +195,13 @@ export default {
           color: '#ccc'
         }
       }
+    },
+    selectedElement () {
+      let resultsListElement = this.$refs.resultsList
+      let selectedIndexAsChild = this.selectedIndex + 1 // DOM children are 1-based.
+      let selectedElementSelector = `:nth-child(${selectedIndexAsChild})`
+      let selectedElement = resultsListElement.querySelector(selectedElementSelector)
+      return selectedElement
     }
   },
   methods: {
@@ -392,17 +399,11 @@ export default {
 
       if (noneOrFirstSelected) {
         this.selectedIndex = this.results.length - 1
-
         resultsListElement.scrollTop = resultsListElement.scrollHeight - resultsListElement.clientHeight
       } else {
         this.selectedIndex -= 1
-
-        let selectedIndexAsChild = this.selectedIndex + 1 // DOM children are 1-based.
-        let selectedElementSelector = `:nth-child(${selectedIndexAsChild})`
-        let selectedElement = resultsListElement.querySelector(selectedElementSelector)
-
-        if (!this.isVisibleInside(resultsListElement, selectedElement)) {
-          resultsListElement.scrollTop -= selectedElement.clientHeight
+        if (this.selectedIsOutsideResultList()) {
+          resultsListElement.scrollTop -= this.selectedElement.clientHeight
         }
       }
     },
@@ -417,31 +418,21 @@ export default {
 
       if (noneOrLastSelected) {
         this.selectedIndex = 0
-
         resultsListElement.scrollTop = 0
       } else {
         this.selectedIndex += 1
-
-        let selectedIndexAsChild = this.selectedIndex + 1 // DOM children are 1-based.
-        let selectedElementSelector = `:nth-child(${selectedIndexAsChild})`
-        let selectedElement = resultsListElement.querySelector(selectedElementSelector)
-
-        if (!this.isVisibleInside(resultsListElement, selectedElement)) {
-          resultsListElement.scrollTop += selectedElement.clientHeight
+        if (this.selectedIsOutsideResultList()) {
+          resultsListElement.scrollTop += this.selectedElement.clientHeight
         }
       }
     },
-    /**
-     * Determine if an element is (or will be) visible within parent client
-     * dimensions for scrolling purposes.
-     * @param {DOM Element} parentElement
-     * @param {DOM Element} childElement
-     * @return {Boolean}
-     */
-    isVisibleInside (parentElement, childElement) {
-      let parentRect = parentElement.getBoundingClientRect()
-      let childRect = childElement.getBoundingClientRect()
-      return (childRect.top >= parentRect.top && childRect.bottom <= parentRect.bottom)
+    selectedIsOutsideResultList () {
+      let resultsListElement = this.$refs.resultsList
+      let resultsListElementRect = resultsListElement.getBoundingClientRect()
+      let selectedElementRect = this.selectedElement.getBoundingClientRect()
+
+      return (selectedElementRect.top <= resultsListElementRect.top ||
+              selectedElementRect.bottom >= resultsListElementRect.bottom)
     },
 
     /**
