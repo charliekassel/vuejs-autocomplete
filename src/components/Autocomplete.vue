@@ -386,16 +386,23 @@ export default {
      * Focus on the previous results item
      */
     up () {
-      let resultsList = this.$refs.resultsList
+      let resultsListElement = this.$refs.resultsList
 
-      if (this.selectedIndex === null || this.selectedIndex === 0) {
+      let noneOrFirstSelected = this.selectedIndex === null || this.selectedIndex === 0
+
+      if (noneOrFirstSelected) {
         this.selectedIndex = this.results.length - 1
-        resultsList.scrollTop = resultsList.scrollHeight - resultsList.clientHeight
+
+        resultsListElement.scrollTop = resultsListElement.scrollHeight - resultsListElement.clientHeight
       } else {
-        let [ selectedElement ] = resultsList.getElementsByClassName('autocomplete__selected')
         this.selectedIndex -= 1
-        if (!this.isVisibleInside(resultsList, selectedElement, -1)) {
-          resultsList.scrollTop -= selectedElement.clientHeight
+
+        let selectedIndexAsChild = this.selectedIndex + 1 // DOM children are 1-based.
+        let selectedElementSelector = `:nth-child(${selectedIndexAsChild})`
+        let selectedElement = resultsListElement.querySelector(selectedElementSelector)
+
+        if (!this.isVisibleInside(resultsListElement, selectedElement)) {
+          resultsListElement.scrollTop -= selectedElement.clientHeight
         }
       }
     },
@@ -404,36 +411,37 @@ export default {
      * Focus on the next results item
      */
     down () {
-      let resultsList = this.$refs.resultsList
+      let resultsListElement = this.$refs.resultsList
 
-      if (this.selectedIndex === null || this.selectedIndex === this.results.length - 1) {
+      let noneOrLastSelected = this.selectedIndex === null || this.selectedIndex === this.results.length - 1
+
+      if (noneOrLastSelected) {
         this.selectedIndex = 0
-        resultsList.scrollTop = 0
+
+        resultsListElement.scrollTop = 0
       } else {
-        let [ selectedElement ] = resultsList.getElementsByClassName('autocomplete__selected')
         this.selectedIndex += 1
-        if (!this.isVisibleInside(resultsList, selectedElement, 1)) {
-          resultsList.scrollTop += selectedElement.clientHeight
+
+        let selectedIndexAsChild = this.selectedIndex + 1 // DOM children are 1-based.
+        let selectedElementSelector = `:nth-child(${selectedIndexAsChild})`
+        let selectedElement = resultsListElement.querySelector(selectedElementSelector)
+
+        if (!this.isVisibleInside(resultsListElement, selectedElement)) {
+          resultsListElement.scrollTop += selectedElement.clientHeight
         }
       }
     },
     /**
      * Determine if an element is (or will be) visible within parent client
      * dimensions for scrolling purposes.
-     * @param {Object} parentElement
-     * @param {Object} childElement
-     * @param {Integer} offset
+     * @param {DOM Element} parentElement
+     * @param {DOM Element} childElement
      * @return {Boolean}
      */
-    isVisibleInside (parentElement, childElement, offset) {
-      let parent = parentElement.getBoundingClientRect()
-      let child = childElement.getBoundingClientRect()
-      let childTop = child.top + (childElement.clientHeight * offset)
-      let childBottom = child.bottom + (childElement.clientHeight * offset)
-      return (
-        childTop >= parent.top &&
-        childBottom <= parent.bottom
-      )
+    isVisibleInside (parentElement, childElement) {
+      let parentRect = parentElement.getBoundingClientRect()
+      let childRect = childElement.getBoundingClientRect()
+      return (childRect.top >= parentRect.top && childRect.bottom <= parentRect.bottom)
     },
 
     /**
