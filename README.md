@@ -65,8 +65,8 @@ computed: {
   },
 },
 methods: {
-  distributionGroupsEndpoint () {
-    return process.env.API + '/distribution/search?query='
+  distributionGroupsEndpoint (input) {
+    return process.env.API + '/distribution/search?query=' + input
   },
   addDistributionGroup (group) {
     this.group = group
