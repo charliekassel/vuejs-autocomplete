@@ -145,6 +145,13 @@ export default {
     },
 
     /**
+     * Credentials: same-origin, include, *omit
+     */
+    credentials: {
+      type: String
+    },
+
+    /**
      * Optional clear button icon class
      */
     clearButtonIcon: {
@@ -244,7 +251,7 @@ export default {
     request (url) {
       let promise = fetch(url, {
         method: 'get',
-        credentials: 'same-origin',
+        credentials: this.getCredentials(),
         headers: this.getHeaders()
       })
 
@@ -285,6 +292,17 @@ export default {
         }
       }
       return new Headers(headers)
+    },
+
+    /**
+     * Set default credentials and apply user supplied value
+     */
+    getCredentials () {
+      let credentials = 'same-origin'
+      if (this.credentials) {
+        credentials = this.credentials
+      }
+      return credentials
     },
 
     /**
