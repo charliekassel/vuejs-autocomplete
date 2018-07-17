@@ -149,6 +149,14 @@ export default {
      */
     clearButtonIcon: {
       type: String
+    },
+
+    /**
+     * Change the debounce interval
+     */
+    debounce: {
+      type: [String, Number],
+      default: 200
     }
   },
   data () {
@@ -235,7 +243,7 @@ export default {
       this.loading = true
       this.setEventListener()
       this.request(url)
-    }, 200),
+    }, this.debounce),
 
     /**
      * Make an http request for results
