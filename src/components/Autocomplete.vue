@@ -30,7 +30,7 @@
       </span>
     </div>
 
-    <ul v-show="showResults" class="autocomplete__results" :style="listStyle">
+    <ul v-show="showResults && !isEmpty" class="autocomplete__results" :style="listStyle">
       <slot name="results">
         <!-- error -->
         <li v-if="hasError" class="autocomplete__results__item autocomplete__results__item--error">{{ error }}</li>
@@ -157,6 +157,14 @@ export default {
     debounceInterval: {
       type: [String, Number],
       default: 200
+    },
+
+    /**
+     * Set minimum character before search can run
+     */
+    minCharacter: {
+      type: [String, Number],
+      default: 0
     }
   },
   data () {
@@ -188,7 +196,7 @@ export default {
         this.showNoResults
     },
     isEmpty () {
-      return !this.display
+      return (typeof this.display === 'undefined' || this.display === null || this.display.length <= this.minCharacter)
     },
     isLoading () {
       return this.loading === true
@@ -239,7 +247,7 @@ export default {
      * @param {String} url
      */
     resourceSearch: debounce(function (url) {
-      if (!this.display) {
+      if (this.isEmpty) {
         this.results = []
         return
       }

@@ -101,6 +101,7 @@ methods: {
 | showNoResults         | Boolean                     |          | true      | To show a message that no results were found|
 | clearButtonIcon       | String                      |          |           | Optionally provide an icon css class|
 | debounceInterval      | String\|Number              |          | 200       | Change the debounce interval|
+| minCharacter          | Number                      |          | 0         | Change minimum character before search can run|
 
 ## Available events
 
