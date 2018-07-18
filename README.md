@@ -100,7 +100,7 @@ methods: {
 | requestHeaders        | Object                      |          |           | extra headers appended to the request|
 | showNoResults         | Boolean                     |          | true      | To show a message that no results were found|
 | clearButtonIcon       | String                      |          |           | Optionally provide an icon css class|
-| debounce              | String\|Number              |          | 200       | Change the debounce interval|
+| debounceInterval      | String\|Number              |          | 200       | Change the debounce interval|
 
 ## Available events
 

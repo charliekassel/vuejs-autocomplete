@@ -154,8 +154,8 @@ export default {
     /**
      * Change the debounce interval
      */
-    debounce: {
-      type: [String, Number],
+    debounceInterval: {
+      type: [Number],
       default: 200
     }
   },
@@ -204,6 +204,9 @@ export default {
       }
     }
   },
+  created () {
+    global.debounceInterval = this.debounceInterval
+  },
   methods: {
     /**
      * Search wrapper method
@@ -243,7 +246,7 @@ export default {
       this.loading = true
       this.setEventListener()
       this.request(url)
-    }, this.debounce),
+    }, global.debounceInterval),
 
     /**
      * Make an http request for results
