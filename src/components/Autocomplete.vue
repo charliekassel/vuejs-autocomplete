@@ -155,7 +155,7 @@ export default {
      * Change the debounce interval
      */
     debounceInterval: {
-      type: [Number],
+      type: [String, Number],
       default: 200
     }
   },
