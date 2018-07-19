@@ -11,6 +11,7 @@
           type="text"
           :placeholder="placeholder"
           :disabled="disableInput"
+          :maxlength="maxlength"
           @click="search"
           @input="search"
           @keydown.enter="enter"
@@ -149,6 +150,14 @@ export default {
      */
     clearButtonIcon: {
       type: String
+    },
+
+    /**
+     * Optional max input length
+     */
+    maxlength: {
+      type: Integer,
+      default: 50,
     }
   },
   data () {

@@ -100,6 +100,7 @@ methods: {
 | requestHeaders        | Object                      |          |           | extra headers appended to the request|
 | showNoResults         | Boolean                     |          | true      | To show a message that no results were found|
 | clearButtonIcon       | String                      |          |           | Optionally provide an icon css class|
+| maxlength             | Integer                     |          | 50        | Optional max input length|
 
 ## Available events
 
