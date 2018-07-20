@@ -157,7 +157,6 @@ export default {
      */
     maxlength: {
       type: Number,
-      default: 50,
     }
   },
   data () {
