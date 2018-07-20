@@ -156,7 +156,7 @@ export default {
      * Optional max input length
      */
     maxlength: {
-      type: Integer,
+      type: Number,
       default: 50,
     }
   },
