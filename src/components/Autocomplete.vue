@@ -156,7 +156,7 @@ export default {
      * Optional max input length
      */
     maxlength: {
-      type: Number,
+      type: Number
     }
   },
   data () {
