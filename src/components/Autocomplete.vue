@@ -63,6 +63,7 @@
 
 <script type="text/babel">
 import debounce from 'lodash/debounce'
+import get from 'lodash/get'
 export default {
   props: {
     /**
@@ -122,7 +123,7 @@ export default {
      * api - property of results array
      */
     resultsProperty: {
-      type: String
+      type: [String, Array]
     },
     /**
      * Results property used as the value
@@ -330,11 +331,21 @@ export default {
      * @return {Array}
      */
     setResults (response) {
-      if (this.resultsFormatter) {
-        return this.resultsFormatter(response)
-      }
-      if (this.resultsProperty && response[this.resultsProperty]) {
-        return response[this.resultsProperty]
+      if (this.resultsProperty) {
+        switch (typeof this.resultsProperty) {
+          case 'string':
+            if (response[this.resultsProperty]) {
+              return response[this.resultsProperty]
+            } else {
+              return []
+            }
+          case 'object':
+            if (Array.isArray(this.resultsProperty)) {
+              return get(response, this.resultsProperty, [])
+            }
+          default:
+            throw new TypeError()
+        }
       }
       if (Array.isArray(response)) {
         return response
