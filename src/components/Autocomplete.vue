@@ -9,6 +9,7 @@
         <input
           v-model="display"
           type="text"
+          :class="inputElementClass"
           :placeholder="placeholder"
           :disabled="disableInput"
           :maxlength="maxlength"
@@ -95,6 +96,12 @@ export default {
      * CSS class for the surrounding input div
      */
     inputClass: {
+      type: [String, Object]
+    },
+    /**
+     * CSS class for the input div itself
+     */
+    inputElementClass: {
       type: [String, Object]
     },
     /**
