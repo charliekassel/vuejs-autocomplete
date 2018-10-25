@@ -336,13 +336,13 @@ export default {
           case 'string':
             if (response[this.resultsProperty]) {
               return response[this.resultsProperty]
-            } else {
-              return []
             }
+            return []
           case 'object':
             if (Array.isArray(this.resultsProperty)) {
               return get(response, this.resultsProperty, [])
             }
+            return []
           default:
             throw new TypeError()
         }
