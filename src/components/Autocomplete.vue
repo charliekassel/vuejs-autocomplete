@@ -1,6 +1,6 @@
 <template>
   <div class="autocomplete">
-    <div class="autocomplete__box" :class="[inputClass, {'autocomplete__searching' : showResults}]">
+    <div class="autocomplete__box" :class="{'autocomplete__searching' : showResults}">
 
       <img v-if="!isLoading" class="autocomplete__icon" src="../assets/search.svg">
       <img v-else class="autocomplete__icon animate-spin" src="../assets/loading.svg">
@@ -12,6 +12,7 @@
           :placeholder="placeholder"
           :disabled="disableInput"
           :maxlength="maxlength"
+          :class="inputClass"
           @click="search"
           @input="search"
           @keydown.enter="enter"
