@@ -71,7 +71,7 @@ methods: {
   addDistributionGroup (group) {
     this.group = group
     // access the autocomplete component methods from the parent
-    this.$refs.autocomplete.clearValues()
+    this.$refs.autocomplete.clear()
   },
   authHeaders () {
     return {
