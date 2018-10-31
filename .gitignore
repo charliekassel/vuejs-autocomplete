@@ -6,4 +6,3 @@ yarn-debug.log*
 yarn-error.log*
 test/unit/coverage
 package-lock.json
-.idea
