@@ -92,6 +92,7 @@ methods: {
 | initialValue          | String\|Number              |          |           | starting value|
 | initialDisplay        | String                      |          |           | starting display value|
 | inputClass            | String\|Object              |          |           | css class for the input div|
+| inputElementClass     | String\|Object              |          |           | css class for the input element inside div|
 | disableInput          | Boolean                     |          |           | to disable the input|
 | name                  | String                      |          |           | name attribute for the `value` input|
 | resultsProperty       | String                      |          |           | property api results are keyed under|
