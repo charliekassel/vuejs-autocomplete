@@ -88,6 +88,7 @@ methods: {
 | Prop                  | Type                        | Required | Default   | Description |
 |-----------------------|-----------------------------|----------|-----------|-------------|
 | source                | String\|Func\|Object\|Array |          | true      | data source for the results|
+| method                | String                      |          | 'get'     | http method for api requests|
 | placeholder           | String                      |          | 'Search'  | input placeholder|
 | initialValue          | String\|Number              |          |           | starting value|
 | initialDisplay        | String                      |          |           | starting display value|

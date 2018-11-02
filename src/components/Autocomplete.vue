@@ -76,6 +76,13 @@ export default {
       required: true
     },
     /**
+     * http method
+     */
+    method: {
+      type: String,
+      default: 'get'
+    },
+    /**
      * Input placeholder
      */
     placeholder: {
@@ -260,7 +267,7 @@ export default {
      */
     request (url) {
       let promise = fetch(url, {
-        method: 'get',
+        method: this.method,
         credentials: this.getCredentials(),
         headers: this.getHeaders()
       })
@@ -293,8 +300,7 @@ export default {
      */
     getHeaders () {
       const headers = {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
+        'Accept': 'application/json, text/plain, */*'
       }
       if (this.requestHeaders) {
         for (var prop in this.requestHeaders) {
