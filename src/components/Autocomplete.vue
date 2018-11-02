@@ -8,7 +8,6 @@
       <div class="autocomplete__inputs">
         <input
           v-model="display"
-          type="text"
           :placeholder="placeholder"
           :disabled="disableInput"
           :maxlength="maxlength"
@@ -21,7 +20,9 @@
           @keydown.down="down"
           @keydown.esc="close"
           @focus="focus"
-          @blur="blur">
+          @blur="blur"
+          type="text"
+          autocomplete="off">
         <input :name="name" type="hidden" :value="value">
       </div>
 
