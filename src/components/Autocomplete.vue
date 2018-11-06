@@ -140,6 +140,13 @@ export default {
     },
 
     /**
+     * Callback to format the server data
+     */
+    setResults: {
+      type: Function
+    },
+
+    /**
      * Whether to show the no results message
      */
     showNoResults: {
@@ -281,7 +288,11 @@ export default {
           throw new Error('Network response was not ok.')
         })
         .then(response => {
-          this.results = this.setResults(response)
+          if(this.setResults){
+            this.results = this.setResults(response)
+          } else {
+            this.results = this.defaultSetResults(response)
+          }
           if (this.results.length === 0) {
             this.$emit('noResults', {query: this.display})
           } else {
@@ -326,7 +337,7 @@ export default {
      * @param {Object|Array} response
      * @return {Array}
      */
-    setResults (response) {
+    defaultSetResults (response) {
       if (this.resultsProperty && response[this.resultsProperty]) {
         return response[this.resultsProperty]
       }
