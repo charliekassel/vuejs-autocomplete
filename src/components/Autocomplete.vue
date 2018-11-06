@@ -140,6 +140,13 @@ export default {
     },
 
     /**
+     * Callback to format the server data
+     */
+    customSetResults: {
+      type: Function
+    },
+
+    /**
      * Whether to show the no results message
      */
     showNoResults: {
@@ -327,6 +334,9 @@ export default {
      * @return {Array}
      */
     setResults (response) {
+      if(this.customSetResults){
+        return this.customSetResults(response)
+      }
       if (this.resultsProperty && response[this.resultsProperty]) {
         return response[this.resultsProperty]
       }

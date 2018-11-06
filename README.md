@@ -95,6 +95,7 @@ methods: {
 | inputClass            | String\|Object              |          |           | css class for the input div|
 | disableInput          | Boolean                     |          |           | to disable the input|
 | name                  | String                      |          |           | name attribute for the `value` input|
+| customSetResults      | Function                    |          |           | Callback to format the server data |
 | resultsProperty       | String                      |          |           | property api results are keyed under|
 | resultsValue          | String                      |          | 'id'      | property to use for the `value`|
 | resultsDisplay        | String\|Function            |          | 'name'    | property to use for the `display` or custom function|
