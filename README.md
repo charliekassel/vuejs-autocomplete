@@ -87,7 +87,7 @@ methods: {
 
 | Prop                  | Type                        | Required | Default   | Description |
 |-----------------------|-----------------------------|----------|-----------|-------------|
-| source                | String\|Func\|Object\|Array |          | true      | data source for the results|
+| source                | String\|Function\|Object\|Array |          | true      | data source for the results|
 | method                | String                      |          | 'get'     | http method for api requests|
 | placeholder           | String                      |          | 'Search'  | input placeholder|
 | initialValue          | String\|Number              |          |           | starting value|
@@ -95,7 +95,7 @@ methods: {
 | inputClass            | String\|Object              |          |           | css class for the input div|
 | disableInput          | Boolean                     |          |           | to disable the input|
 | name                  | String                      |          |           | name attribute for the `value` input|
-| customSetResults      | Function                    |          |           | Callback to format the server data |
+| resultsFormatter      | Function<Object[]>          |          |           | Function to format the server data. Should return an array of objects with id and name properties |
 | resultsProperty       | String                      |          |           | property api results are keyed under|
 | resultsValue          | String                      |          | 'id'      | property to use for the `value`|
 | resultsDisplay        | String\|Function            |          | 'name'    | property to use for the `display` or custom function|

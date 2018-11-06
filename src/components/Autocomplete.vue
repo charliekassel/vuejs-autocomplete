@@ -142,7 +142,7 @@ export default {
     /**
      * Callback to format the server data
      */
-    customSetResults: {
+    resultsFormatter: {
       type: Function
     },
 
@@ -289,11 +289,7 @@ export default {
         })
         .then(response => {
           this.results = this.setResults(response)
-          if (this.results.length === 0) {
-            this.$emit('noResults', {query: this.display})
-          } else {
-            this.$emit('results', {results: this.results})
-          }
+          this.emitRequestResultEvent()
           this.loading = false
         })
         .catch(error => {
@@ -334,8 +330,8 @@ export default {
      * @return {Array}
      */
     setResults (response) {
-      if(this.customSetResults){
-        return this.customSetResults(response)
+      if (this.resultsFormatter) {
+        return this.resultsFormatter(response)
       }
       if (this.resultsProperty && response[this.resultsProperty]) {
         return response[this.resultsProperty]
@@ -344,6 +340,17 @@ export default {
         return response
       }
       return []
+    },
+
+    /**
+     * Emit an event based on the request results
+     */
+    emitRequestResultEvent () {
+      if (this.results.length === 0) {
+        this.$emit('noResults', {query: this.display})
+      } else {
+        this.$emit('results', {results: this.results})
+      }
     },
 
     /**
