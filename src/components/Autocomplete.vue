@@ -463,7 +463,10 @@ export default {
         return
       }
       this.select(this.results[this.selectedIndex])
-      this.$emit('enter', this.display)
+      this.$emit('enter', {
+        display: this.display,
+        selectedObject: this.results[this.selectedIndex]
+      })
     },
 
     /**
