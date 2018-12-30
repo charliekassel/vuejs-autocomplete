@@ -139,7 +139,7 @@ export default {
       default: 'name'
     },
     /**
-     * Selected value property used as the display
+     * Selected Value property used as the display
      */
     selectedValueDisplay: {
       type: [Function]
