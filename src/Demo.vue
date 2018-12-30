@@ -174,6 +174,7 @@
       <div class="example">
         <h5>Example</h5>
         <autocomplete
+          :selected-value-display="selectedValueDisplay"
           source="https://api.github.com/search/repositories?q="
           results-property="items"
           :results-display="formatDisplay"
@@ -238,6 +239,9 @@ export default {
 
     formatDisplay (result) {
       return result.full_name + ' <strong>[' + result.stargazers_count + ']</strong>'
+    },
+    selectedValueDisplay (result) {
+      return result.full_name
     }
   }
 }

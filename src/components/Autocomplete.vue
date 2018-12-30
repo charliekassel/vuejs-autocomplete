@@ -138,7 +138,12 @@ export default {
       type: [String, Function],
       default: 'name'
     },
-
+    /**
+     * Selected Value property used as the display
+     */
+    selectedValueDisplay: {
+      type: [Function]
+    },
     /**
      * Callback to format the server data
      */
@@ -380,7 +385,7 @@ export default {
         return
       }
       this.value = (this.resultsValue && obj[this.resultsValue]) ? obj[this.resultsValue] : obj.id
-      this.display = this.formatDisplay(obj)
+      this.display = this.selectedValueDisplay(obj)
       this.selectedDisplay = this.display
       this.$emit('selected', {
         value: this.value,
