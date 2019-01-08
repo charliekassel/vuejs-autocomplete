@@ -436,22 +436,69 @@ export default {
      * Focus on the previous results item
      */
     up () {
-      if (this.selectedIndex === null) {
+      let noneOrFirstSelected = this.selectedIndex === null || this.selectedIndex === 0
+
+      if (noneOrFirstSelected) {
         this.selectedIndex = this.results.length - 1
-        return
+      } else {
+        this.selectedIndex -= 1
       }
-      this.selectedIndex = (this.selectedIndex === 0) ? this.results.length - 1 : this.selectedIndex - 1
+
+      this.syncScrollWithSelectedPosition()
     },
 
     /**
      * Focus on the next results item
      */
     down () {
-      if (this.selectedIndex === null) {
+      let noneOrLastSelected = this.selectedIndex === null || this.selectedIndex === this.results.length - 1
+
+      if (noneOrLastSelected) {
         this.selectedIndex = 0
-        return
+      } else {
+        this.selectedIndex += 1
       }
-      this.selectedIndex = (this.selectedIndex === this.results.length - 1) ? 0 : this.selectedIndex + 1
+
+      this.syncScrollWithSelectedPosition()
+    },
+
+    syncScrollWithSelectedPosition () {
+      /*
+       * NOTE:
+       *
+       * Using .offset(Top|Height) values will not take into consideration
+       * applied transformations.  Using .getBoundingClientRect() will
+       * provide post-transformation sizes, however the values are not
+       * relative to the parent element, and are also affected by page
+       * scroll.
+       */
+
+      let resultsListElement = this.$el.querySelector('.autocomplete__results')
+      let selectedElement = resultsListElement.children[this.selectedIndex]
+
+      let selectedElementTop = selectedElement.offsetTop
+      let selectedElementHeight = selectedElement.offsetHeight
+      let selectedElementBottom = selectedElementTop + selectedElementHeight
+
+      let visibleScrollAreaTop = resultsListElement.scrollTop
+      let visibleScrollAreaHeight = resultsListElement.clientHeight
+      let visibleScrollAreaBottom = visibleScrollAreaTop + visibleScrollAreaHeight
+
+      /*
+       * Only adjust the scroll position if the scroll area can display more
+       * than one selection choice; handles an unlikely UI/UX situation, where
+       * each choice is actually taller than the visible scroll area (the user
+       * would never see a complete choice in the scroll area), a strange UI.
+       */
+      let scrollAreaFitsManyChoices = selectedElementHeight < visibleScrollAreaHeight
+
+      if (scrollAreaFitsManyChoices) {
+        if (selectedElementTop < visibleScrollAreaTop) {
+          resultsListElement.scrollTop = selectedElementTop
+        } else if (selectedElementBottom > visibleScrollAreaBottom) {
+          resultsListElement.scrollTop = selectedElementBottom - visibleScrollAreaHeight
+        }
+      }
     },
 
     /**
