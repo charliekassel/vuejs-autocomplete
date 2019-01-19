@@ -180,6 +180,14 @@ export default {
      */
     maxlength: {
       type: Number
+    },
+
+    /**
+     * Optional validation
+     */
+    validation: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -478,13 +486,19 @@ export default {
     },
 
     /**
-     * Close the results list. If nothing was selected clear the search
+     * Close the results list. If nothing was selected and validate is true clear the search
      */
     close () {
-      if (!this.value || !this.selectedDisplay) {
+      const invalid = !this.value || !this.selectedDisplay
+      const different = this.selectedDisplay !== this.display
+
+      if (this.validation && invalid) {
         this.clear()
+      } else if ((invalid || different) && !this.validation) {
+        this.selectedDisplay = this.display
+        this.$emit('input', this.display)
       }
-      if (this.selectedDisplay !== this.display && this.value) {
+      if (different && this.value) {
         this.display = this.selectedDisplay
       }
 

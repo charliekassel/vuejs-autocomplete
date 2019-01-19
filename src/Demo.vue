@@ -197,6 +197,30 @@
       </div>
     </div>
 
+    <div class="demo">
+      <h3>Using without validation</h3>
+     
+      <div class="example">
+        <h5>Example</h5>
+        <autocomplete
+          :source="[{id:1,name:'abc'},{id:2,name:'def'}]"
+          :validation="false"
+          v-model="demo2">
+        </autocomplete>
+
+        <div class="results" v-if="demo2">
+          <p>Results:</p>
+          <pre>{{ demo2 }}</pre>
+        </div>
+
+        <code>
+    &lt;autocomplete
+      :source="[{id:1,name:'abc'},{id:2,name:'def'}]"
+      v-model="demo1"&gt;
+    &lt;/autocomplete&gt;
+        </code>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -214,7 +238,8 @@ export default {
       objectResults: null,
       apiResults: null,
       ask: null,
-      demo1: null
+      demo1: null,
+      demo2: null
     }
   },
   methods: {
