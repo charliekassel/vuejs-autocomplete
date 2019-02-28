@@ -526,11 +526,11 @@ export default {
   watch: {
     initialValue(newValue, oldValue){
       this.value = newValue
-    }
+    },
     initialDisplay(newDisplay, oldDisplay){
       this.display = newDisplay
     }
-  }
+  },
   mounted () {
     this.value = this.initialValue
     this.display = this.initialDisplay
