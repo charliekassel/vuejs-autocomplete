@@ -247,7 +247,7 @@ export default {
             return
           }
           // When the function is async and returns a promise
-          return this.handlePromise(this.source(this.display));
+          return this.handlePromise(this.source(this.display))
         case typeof this.source === 'function':
           // No resource search with no input
           if (!this.display || this.display.length < 1) {
