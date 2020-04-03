@@ -241,6 +241,13 @@ export default {
           }
 
           return this.resourceSearch(this.source + this.display)
+        case this.source.constructor.name === 'AsyncFunction':
+          // No resource search with no input
+          if (!this.display || this.display.length < 1) {
+            return
+          }
+          // When the function is async and returns a promise
+          return this.handlePromise(this.source(this.display));
         case typeof this.source === 'function':
           // No resource search with no input
           if (!this.display || this.display.length < 1) {
@@ -279,6 +286,10 @@ export default {
         headers: this.getHeaders()
       })
 
+      return this.handlePromise(promise)
+    },
+
+    handlePromise: function (promise) {
       return promise
         .then(response => {
           if (response.ok) {
@@ -297,7 +308,6 @@ export default {
           this.loading = false
         })
     },
-
     /**
      * Set some default headers and apply user supplied headers
      */
