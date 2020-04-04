@@ -290,30 +290,26 @@ export default {
       return this.handleFetchRequest(promise)
     },
 
-    handleFetchResponse: (response) => {
+    handleFetchResponse (response) {
       if (response.ok) {
         this.error = null
         return response.json()
       }
       throw new Error(NETWORK_RESPONSE_ERROR)
     },
-
-    handlePromiseResolution: (response) => {
+    handlePromiseResolution (response) {
       if (response.status === 200) {
         this.error = null
         return response
       }
       throw new Error(NETWORK_RESPONSE_ERROR)
     },
-
-    handleFetchRequest (promise) {
+    handleFetchRequest: function (promise) {
       return this.handlePromise(promise, (response) => this.handleFetchResponse(response))
     },
-
     handleCallback (promise) {
       return this.handlePromise(promise, (response) => this.handlePromiseResolution(response))
     },
-
     handlePromise (promise, responseHandler) {
       return promise
         .then(response => {
