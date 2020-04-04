@@ -63,6 +63,7 @@
 
 <script type="text/babel">
 import debounce from 'lodash/debounce'
+const NETWORK_RESPONSE_ERROR = 'Network response was not ok.'
 export default {
   props: {
     /**
@@ -247,7 +248,7 @@ export default {
             return
           }
           // When the function is async and returns a promise
-          return this.handlePromise(this.source(this.display))
+          return this.handleCallback(this.source(this.display))
         case typeof this.source === 'function':
           // No resource search with no input
           if (!this.display || this.display.length < 1) {
@@ -286,17 +287,37 @@ export default {
         headers: this.getHeaders()
       })
 
-      return this.handlePromise(promise)
+      return this.handleFetchRequest(promise)
     },
 
-    handlePromise: function (promise) {
+    handleFetchResponse: (response) => {
+      if (response.ok) {
+        this.error = null
+        return response.json()
+      }
+      throw new Error(NETWORK_RESPONSE_ERROR)
+    },
+
+    handlePromiseResolution: (response) => {
+      if (response.status === 200) {
+        this.error = null
+        return response
+      }
+      throw new Error(NETWORK_RESPONSE_ERROR)
+    },
+
+    handleFetchRequest (promise) {
+      return this.handlePromise(promise, (response) => this.handleFetchResponse(response))
+    },
+
+    handleCallback (promise) {
+      return this.handlePromise(promise, (response) => this.handlePromiseResolution(response))
+    },
+
+    handlePromise (promise, responseHandler) {
       return promise
         .then(response => {
-          if (response.ok) {
-            this.error = null
-            return response.json()
-          }
-          throw new Error('Network response was not ok.')
+          return responseHandler(response)
         })
         .then(response => {
           this.results = this.setResults(response)
