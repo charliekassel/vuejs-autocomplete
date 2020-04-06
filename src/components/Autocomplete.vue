@@ -308,6 +308,7 @@ export default {
       return this.handlePromise(promise, (response) => this.handleFetchResponse(response))
     },
     handleCallback (promise) {
+      this.loading = true
       return this.handlePromise(promise, (response) => this.handlePromiseResolution(response))
     },
     handlePromise (promise, responseHandler) {
