@@ -290,6 +290,11 @@ export default {
       return this.handleFetchRequest(promise)
     },
 
+    /**
+     * return response json from fetch method if no errors
+     * handle errors if request fails
+     * @param {Object} response
+     */
     handleFetchResponse (response) {
       if (response.ok) {
         this.error = null
@@ -297,6 +302,12 @@ export default {
       }
       throw new Error(NETWORK_RESPONSE_ERROR)
     },
+
+    /**
+     * return response json if promise resolves correctly
+     * handle errors if promise is rejected
+     * @param {Object} response
+     */
     handlePromiseResolution (response) {
       if (response.status === 200) {
         this.error = null
@@ -304,13 +315,34 @@ export default {
       }
       throw new Error(NETWORK_RESPONSE_ERROR)
     },
+
+    /**
+     * Handle the HTTP request made using fetch method
+     * @param {Object} promise
+     */
     handleFetchRequest: function (promise) {
       return this.handlePromise(promise, (response) => this.handleFetchResponse(response))
     },
-    handleCallback (promise) {
+
+    /**
+     * Debounce the typed search query before executing the promise
+     * @param {Function} promise
+     */
+    handleCallback: debounce(function (promise) {
+      if (!this.display) {
+        this.results = []
+        return
+      }
       this.loading = true
+      this.setEventListener()
       return this.handlePromise(promise, (response) => this.handlePromiseResolution(response))
-    },
+    }, 200),
+
+    /**
+     * handle promise resolution and rejection
+     * @param {Object} promise
+     * @param {Function} responseHandler
+     */
     handlePromise (promise, responseHandler) {
       return promise
         .then(response => {
@@ -326,6 +358,7 @@ export default {
           this.loading = false
         })
     },
+
     /**
      * Set some default headers and apply user supplied headers
      */
@@ -401,7 +434,7 @@ export default {
 
     /**
      * Select a result
-     * @param {Object}
+     * @param {Object} obj
      */
     select (obj) {
       if (!obj) {
@@ -453,7 +486,7 @@ export default {
 
     /**
      * Is this item selected?
-     * @param {Object}
+     * @param {Object} key
      * @return {Boolean}
      */
     isSelected (key) {
