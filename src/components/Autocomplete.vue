@@ -326,17 +326,22 @@ export default {
 
     /**
      * Debounce the typed search query before executing the promise
+     * set loading to true and set error to null before promise is evaluated
      * @param {Function} promise
      */
-    handleCallback: debounce(function (promise) {
-      if (!this.display) {
-        this.results = []
-        return
-      }
-      this.loading = true
-      this.setEventListener()
-      return this.handlePromise(promise, (response) => this.handlePromiseResolution(response))
-    }, 200),
+    handleCallback (promise) {
+      const debouncedFunction = debounce(() => {
+        if (!this.display) {
+          this.results = []
+          return
+        }
+        this.loading = true
+        this.error = null
+        this.setEventListener()
+        return this.handlePromise(promise, (response) => this.handlePromiseResolution(response))
+      }, 200)
+      return debouncedFunction()
+    },
 
     /**
      * handle promise resolution and rejection
