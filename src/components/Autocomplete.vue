@@ -272,6 +272,7 @@ export default {
         return
       }
       this.loading = true
+      this.error = null
       this.setEventListener()
       this.request(url)
     }, 200),
