@@ -63,6 +63,7 @@
 
 <script type="text/babel">
 import debounce from 'lodash/debounce'
+const NETWORK_RESPONSE_ERROR = 'Network response was not ok.'
 export default {
   props: {
     /**
@@ -241,6 +242,13 @@ export default {
           }
 
           return this.resourceSearch(this.source + this.display)
+        case this.source.constructor.name === 'AsyncFunction':
+          // No resource search with no input
+          if (!this.display || this.display.length < 1) {
+            return
+          }
+          // When the function is async and returns a promise
+          return this.handleCallback(this.source(this.display))
         case typeof this.source === 'function':
           // No resource search with no input
           if (!this.display || this.display.length < 1) {
@@ -264,6 +272,7 @@ export default {
         return
       }
       this.loading = true
+      this.error = null
       this.setEventListener()
       this.request(url)
     }, 200),
@@ -279,13 +288,71 @@ export default {
         headers: this.getHeaders()
       })
 
+      return this.handleFetchRequest(promise)
+    },
+
+    /**
+     * return response json from fetch method if no errors
+     * handle errors if request fails
+     * @param {Object} response
+     */
+    handleFetchResponse (response) {
+      if (response.ok) {
+        this.error = null
+        return response.json()
+      }
+      throw new Error(NETWORK_RESPONSE_ERROR)
+    },
+
+    /**
+     * return response json if promise resolves correctly
+     * handle errors if promise is rejected
+     * @param {Object} response
+     */
+    handlePromiseResolution (response) {
+      if (response.status === 200) {
+        this.error = null
+        return response
+      }
+      throw new Error(NETWORK_RESPONSE_ERROR)
+    },
+
+    /**
+     * Handle the HTTP request made using fetch method
+     * @param {Object} promise
+     */
+    handleFetchRequest: function (promise) {
+      return this.handlePromise(promise, (response) => this.handleFetchResponse(response))
+    },
+
+    /**
+     * Debounce the typed search query before executing the promise
+     * set loading to true and set error to null before promise is evaluated
+     * @param {Function} promise
+     */
+    handleCallback (promise) {
+      const debouncedFunction = debounce(() => {
+        if (!this.display) {
+          this.results = []
+          return
+        }
+        this.loading = true
+        this.error = null
+        this.setEventListener()
+        return this.handlePromise(promise, (response) => this.handlePromiseResolution(response))
+      }, 200)
+      return debouncedFunction()
+    },
+
+    /**
+     * handle promise resolution and rejection
+     * @param {Object} promise
+     * @param {Function} responseHandler
+     */
+    handlePromise (promise, responseHandler) {
       return promise
         .then(response => {
-          if (response.ok) {
-            this.error = null
-            return response.json()
-          }
-          throw new Error('Network response was not ok.')
+          return responseHandler(response)
         })
         .then(response => {
           this.results = this.setResults(response)
@@ -373,7 +440,7 @@ export default {
 
     /**
      * Select a result
-     * @param {Object}
+     * @param {Object} obj
      */
     select (obj) {
       if (!obj) {
@@ -425,7 +492,7 @@ export default {
 
     /**
      * Is this item selected?
-     * @param {Object}
+     * @param {Object} key
      * @return {Boolean}
      */
     isSelected (key) {
