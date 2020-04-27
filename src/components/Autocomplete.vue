@@ -7,7 +7,8 @@
 
       <div class="autocomplete__inputs">
         <input
-          v-model="display"
+          v-bind:value="display"
+          v-on:input="display=$event.target.value"
           :placeholder="placeholder"
           :disabled="disableInput"
           :maxlength="maxlength"
