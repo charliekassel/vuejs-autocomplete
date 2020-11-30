@@ -90,6 +90,7 @@ methods: {
 | source                | String\|Function\|Object\|Array |          | true      | data source for the results|
 | method                | String                      |          | 'get'     | http method for api requests|
 | placeholder           | String                      |          | 'Search'  | input placeholder|
+| allowEmptySearch      | Boolean                     |          |           | Make ajax request even the query string is empty|
 | initialValue          | String\|Number              |          |           | starting value|
 | initialDisplay        | String                      |          |           | starting display value|
 | inputClass            | String\|Object              |          |           | css class for the input div|

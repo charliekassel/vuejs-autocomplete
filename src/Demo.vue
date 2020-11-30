@@ -14,6 +14,7 @@
           source="https://api.github.com/search/repositories?q="
           results-property="items"
           results-display="full_name"
+          allowEmptySearch
           @selected="setXHRValue"
           @clear="setXHRValue({})">
         </autocomplete>
@@ -22,6 +23,7 @@
     &lt;autocomplete
       source="https://api.github.com/search/repositories?q="
       results-property="items"
+          :allowEmptySearch="true"
       results-display="full_name"&gt;
     &lt;/autocomplete&gt;
         </code>

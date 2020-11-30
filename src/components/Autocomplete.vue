@@ -89,6 +89,13 @@ export default {
       default: 'Search'
     },
     /**
+     * Allow empty search
+     */
+    allowEmptySearch: {
+      type: Boolean,
+      default: false
+    },
+    /**
      * Preset starting value
      */
     initialValue: {
@@ -211,7 +218,7 @@ export default {
         this.showNoResults
     },
     isEmpty () {
-      return !this.display
+      return (!this.display || this.display.length < 1) && !this.allowEmptySearch
     },
     isLoading () {
       return this.loading === true
@@ -233,17 +240,18 @@ export default {
      */
     search () {
       this.selectedIndex = null
+      this.display = this.allowEmptySearch && !this.display ? '' : this.display
       switch (true) {
         case typeof this.source === 'string':
           // No resource search with no input
-          if (!this.display || this.display.length < 1) {
+          if (this.isEmpty) {
             return
           }
 
           return this.resourceSearch(this.source + this.display)
         case typeof this.source === 'function':
           // No resource search with no input
-          if (!this.display || this.display.length < 1) {
+          if (this.isEmpty) {
             return
           }
           return this.resourceSearch(this.source(this.display))
@@ -259,7 +267,7 @@ export default {
      * @param {String} url
      */
     resourceSearch: debounce(function (url) {
-      if (!this.display) {
+      if (this.isEmpty) {
         this.results = []
         return
       }
@@ -358,7 +366,7 @@ export default {
      */
     arrayLikeSearch () {
       this.setEventListener()
-      if (!this.display) {
+      if (this.isEmpty) {
         this.results = this.source
         this.$emit('results', {results: this.results})
         this.loading = false
