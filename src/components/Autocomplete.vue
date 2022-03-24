@@ -193,7 +193,8 @@ export default {
       error: null,
       selectedId: null,
       selectedDisplay: null,
-      eventListener: false
+      eventListener: false,
+      lastRequestAbortController: null,
     }
   },
   computed: {
@@ -273,10 +274,16 @@ export default {
      * @param {String} url
      */
     request (url) {
+      if (this.lastRequestAbortController) {
+        this.lastRequestAbortController.abort();
+      }
+      this.lastRequestAbortController = new AbortController();
+            
       let promise = fetch(url, {
         method: this.method,
         credentials: this.getCredentials(),
-        headers: this.getHeaders()
+        headers: this.getHeaders(),
+        signal: this.lastRequestAbortController.signal
       })
 
       return promise
@@ -293,8 +300,10 @@ export default {
           this.loading = false
         })
         .catch(error => {
-          this.error = error.message
-          this.loading = false
+          if (error.name !== "AbortError") {
+            this.error = error.message
+            this.loading = false
+          }
         })
     },
 
